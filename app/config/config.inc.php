@@ -19,9 +19,9 @@ define ( "HTTPSTATUS_TOKENREQUIRED", 499 );
 /* HTTP status codes 5xx */
 define ( "HTTPSTATUS_INTSERVERERR", 500 );
 
-define("DB_HOST", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "minecraft131");
+define("DB_HOST", "83.212.126.75");
+define("DB_USER", "user");
+define("DB_PASS", "123456");
 define("DB_NAME", "blog");
 define("DB_VENDOR", "mysql");
 define("DB_DEBUGMODE", "true");
