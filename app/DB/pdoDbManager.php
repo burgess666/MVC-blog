@@ -23,8 +23,8 @@ class pdoDbManager{
 
 	function openConnection(){
 		try {
-			// mysql:host=localhost:3320
-			$connectionStr = $this->dbVendor . ":host=" . $this->hostname . ":3320;dbname=" . $this->dbname . ";charset=" . $this->charset;
+			// mysql:host=83.212.126.75:3306
+			$connectionStr = $this->dbVendor . ":host=" . $this->hostname . ":3306;dbname=" . $this->dbname . ";charset=" . $this->charset;
 			$this->db_link = new PDO($connectionStr, $this->username, $this->password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
 		}
 		catch (PDOException $e) {

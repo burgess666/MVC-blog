@@ -13,8 +13,8 @@ class PostsDAO {
 
 	function getPosts() {
 		$sql = "SELECT * ";
-		$sql .= "FROM posts ";
-		$sql .= "ORDER BY post.posted_on; ";
+		$sql .= "FROM b_post";
+		$sql .= "ORDER BY b_post.posted_date; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery($sql);
 
@@ -30,8 +30,8 @@ class PostsDAO {
 
 	function getPost($id) {
 		$sql = "SELECT * ";
-		$sql .= "FROM posts ";
-		$sql .= "WHERE id = ?; ";
+		$sql .= "FROM b_post";
+		$sql .= "WHERE post_id = ?; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery ( $sql );
 
@@ -47,13 +47,13 @@ class PostsDAO {
 	function insertPost($params) {
 		//create an INSERT INTO sql statement (reads the parametersArray - this contains the fields submitted in the HTML5 form)
 
-		$author = $params['author'];
+		$id = $params['post_id'];
 		$title = $params['title'];
 		$content = $params['content'];
-		$posted_on = $params['posted_on'];
+		$posted_on = $params['posted_date'];
 
 		// preparing query
-		$sql = "INSERT INTO posts (author, title, content, posted_on) VALUES (?, ?, ?, ?)";
+		$sql = "INSERT INTO posts (post_id, title, content, posted_date) VALUES (?, ?, ?, ?)";
 
 		$stmt = $this->pdoDbManager->prepareQuery($sql);
 
@@ -67,12 +67,10 @@ class PostsDAO {
 	}
 
 	function updatePost($id, $params) {
-		$sql = "UPDATE posts ";
-		$sql .= "SET author = ?, title = ?, content = ?, posted_on = ?";
-		$sql .= "WHERE id = ?";
+		$sql = "UPDATE b_posts ";
+		$sql .= "SET title = ?, content = ?, posted_date = ?";
+		$sql .= "WHERE post_id = ?";
 
-		
-		$author = $params['author'];
 		$title = $params['title'];
 		$content = $params['content'];
 		$posted_on = $params['posted_on'];
@@ -90,8 +88,8 @@ class PostsDAO {
 	}
 
 	function deletePost($id) {
-		$sql = "DELETE FROM posts ";
-		$sql .= "WHERE id = ?; ";
+		$sql = "DELETE FROM b_post ";
+		$sql .= "WHERE post_id = ?; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery( $sql );
 
@@ -101,7 +99,7 @@ class PostsDAO {
 	}
 
 	function searchPostsByTitle($searchStr) {
-		$sql = "SELECT * FROM posts WHERE title LIKE ? ; ";
+		$sql = "SELECT * FROM b_post WHERE title LIKE ? ; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery( $sql );
 		
@@ -123,7 +121,7 @@ class PostsDAO {
 	}
 	
 	function searchPostsByAuthor($searchStr) {
-		$sql = "SELECT * FROM posts WHERE author LIKE ? ; ";
+		$sql = "SELECT * FROM b_post WHERE author LIKE ? ; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery( $sql );
 		
