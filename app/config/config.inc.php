@@ -27,4 +27,9 @@ define("DB_VENDOR", "mysql");
 define("DB_DEBUGMODE", "true");
 define("DB_CHARSET", "utf8");
 
+/* representation of a new user in the DB */
+define("TABLE_USER_NAME_LENGTH", 25);
+define("TABLE_USER_EMAIL_LENGTH", 50);
+define("TABLE_USER_PASSWORD_LENGTH", 40);
+
 ?>

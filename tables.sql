@@ -4,7 +4,7 @@ USE blog;
 
 CREATE TABLE b_comment
 (
-comment_id varchar(20) NOT NULL,
+comment_id int NOT NULL AUTO_INCREMENT,
 commented_date date NOT NULL,
 content varchar(50) NOT NULL,
 PRIMARY KEY (comment_id)
@@ -12,8 +12,8 @@ PRIMARY KEY (comment_id)
 
 CREATE TABLE b_post
 (
-post_id varchar(20) NOT NULL,
-comment_id varchar(20) NOT NULL,
+post_id int NOT NULL AUTO_INCREMENT,
+comment_id int NOT NULL,
 posted_date date NOT NULL,
 title varchar(20) NOT NULL ,
 content varchar(50) NOT NULL,
@@ -22,9 +22,9 @@ FOREIGN KEY (comment_id) REFERENCES b_comment(comment_id)
 );
 
 CREATE TABLE b_user(
-user_id varchar(20) NOT NULL,
-post_id varchar(20) NOT NULL,
-comment_id varchar(20) NOT NULL,
+user_id int NOT NULL AUTO_INCREMENT,
+post_id int,
+comment_id int,
 username varchar(20) NOT NULL,
 email varchar(50) NOT NULL,
 passwd varchar(20) NOT NULL,

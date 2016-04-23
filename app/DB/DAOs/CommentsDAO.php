@@ -1,20 +1,21 @@
 <?php
 /**
- * @author Rich Murphy
- * definition of the Post DAO (database access object)
+ * @author Kaiqiang Huang
+ * definition of the Comment DAO (database access object)
  */
-class PostsDAO {
+
+class CommentsDAO {
 	private $pdoDbManager;
 
-	function PostsDAO($DBMngr) {
+	function CommentsDAO($DBMngr) {
 		$this->pdoDbManager = $DBMngr;
 		$this->pdoDbManager->openConnection();
 	}
 
-	function getPosts() {
+	function getComments() {
 		$sql = "SELECT * ";
-		$sql .= "FROM b_post";
-		$sql .= "ORDER BY b_post.posted_date; ";
+		$sql .= "FROM b_comment";
+		$sql .= "ORDER BY b_comment.comment_id; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery($sql);
 
@@ -28,10 +29,10 @@ class PostsDAO {
 		return $arrayOfResults;
 	}
 
-	function getPost($id) {
+	function getComment($id) {
 		$sql = "SELECT * ";
-		$sql .= "FROM b_post";
-		$sql .= "WHERE post_id = ?; ";
+		$sql .= "FROM b_comment";
+		$sql .= "WHERE comment_id = ?; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery ( $sql );
 
@@ -44,48 +45,41 @@ class PostsDAO {
 		return $result;
 	}
 
-	function insertPost($params) {
+	function insertComment($params) {
 		//create an INSERT INTO sql statement (reads the parametersArray - this contains the fields submitted in the HTML5 form)
 
-		$title = $params['title'];
+		$commented_date = $params['commented_date'];
 		$content = $params['content'];
-		$posted_on = $params['posted_date'];
 
 		// preparing query
-		$sql = "INSERT INTO posts (title, content, posted_date) VALUES (?, ?, ?)";
-
+		$sql = "INSERT INTO b_content (commented_date, content) VALUES (?, ?)";
 		$stmt = $this->pdoDbManager->prepareQuery($sql);
 
-		$this->pdoDbManager->bindValue($stmt, 1, $title, PDO::PARAM_STR);
+		$this->pdoDbManager->bindValue($stmt, 1, $commented_date, PDO::PARAM_STR);
 		$this->pdoDbManager->bindValue($stmt, 2, $content, PDO::PARAM_STR);
-		$this->pdoDbManager->bindValue($stmt, 3, $posted_on, PDO::PARAM_STR);
-
+		
 		// execute the query
 		$this->pdoDbManager->executeQuery($stmt);
 	}
 
-	function updatePost($id, $params) {
-		$sql = "UPDATE b_posts ";
-		$sql .= "SET title = ?, content = ?, posted_date = ?";
-		$sql .= "WHERE post_id = ?";
+	function updateComment($id, $params) {
+		$sql = "UPDATE b_comment ";
+		$sql .= "SET commented_date = ?, content = ?";
+		$sql .= "WHERE comment_id = ?";
 
-		$title = $params['title'];
+		$commented_date = $params['commented_date'];
 		$content = $params['content'];
-		$posted_on = $params['posted_on'];
 
 		$stmt = $this->pdoDbManager->prepareQuery($sql);
 
-		$this->pdoDbManager->BindValue($stmt, 1, $title, PDO::PARAM_STR);
+		$this->pdoDbManager->BindValue($stmt, 1, $commented_date, PDO::PARAM_STR);
 		$this->pdoDbManager->BindValue($stmt, 2, $content, PDO::PARAM_STR);
-		$this->pdoDbManager->BindValue($stmt, 3, $posted_on, PDO::PARAM_STR);
-		
-
 		$this->pdoDbManager->executeQuery($stmt);
 	}
 
-	function deletePost($id) {
-		$sql = "DELETE FROM b_post ";
-		$sql .= "WHERE post_id = ?; ";
+	function deleteComment($id) {
+		$sql = "DELETE FROM b_comment ";
+		$sql .= "WHERE comment_id = ?; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery( $sql );
 
@@ -94,30 +88,9 @@ class PostsDAO {
 		$this->pdoDbManager->executeQuery( $stmt );
 	}
 
-	function searchPostsByTitle($searchStr) {
-		$sql = "SELECT * FROM b_post WHERE title LIKE ? ; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery( $sql );
-		
-		$searchStr = "%" . $searchStr . "%";
-		
-		$this->pdoDbManager->bindValue($stmt, 1, $searchStr, PDO::PARAM_STR);
-
-		$this->pdoDbManager->executeQuery( $stmt );
-
-		$arrayOfResults = $this->pdoDbManager->fetchResults ( $stmt );
-
-		if (empty($arrayOfResults)) {
-			return null;
-		}
-
-		return $arrayOfResults;
-
-
-	}
 	
-	function searchPostsByAuthor($searchStr) {
-		$sql = "SELECT * FROM b_post WHERE author LIKE ? ; ";
+	function searchCommentsByContent($searchStr) {
+		$sql = "SELECT * FROM b_comment WHERE content LIKE ? ; ";
 
 		$stmt = $this->pdoDbManager->prepareQuery( $sql );
 		
@@ -134,8 +107,6 @@ class PostsDAO {
 		}
 
 		return $arrayOfResults;
-
-
 	}
 }
 ?>
