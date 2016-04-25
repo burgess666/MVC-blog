@@ -32,7 +32,7 @@ $app->map ( "/posts(/:id)", function ($postID = null) use($app) {
 			default :
 		}
 	}
-	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
+	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
 $app->run ();

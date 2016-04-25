@@ -1,8 +1,9 @@
 <?php
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/PostsDAO.php";
+require_once "Validation.php";
 
-class PostsModel {
+class PostModel {
 	private $PostsDAO; // list of DAOs used by this model
 	private $dbmanager; // dbmanager
 	public $apiResponse; // api response
@@ -27,15 +28,15 @@ class PostsModel {
 	 * @param array $PostRepresentation:
 	 *        	an associative array containing the detail of the new post
 	 */
-	public function createPost($newPost) {
+	public function createNewPost($newPost) {
 		// validation of the values of the new post
 		
 		// compulsory values
-		if (! empty ( $newPost ["posted_date"] ) && ! empty ( $newPost ["title"] ) && ! empty ( $newPost ["content"] )) {
+		if (! empty ( $newPost ["user_id"] ) && ! empty ( $newPost ["posted_date"] ) && ! empty ( $newPost ["title"] ) && ! empty ( $newPost ["content"] )) {
 			/*
 			 * the model knows the representation of a post in the database and this is: name: varchar(25) surname: varchar(25) email: varchar(50) password: varchar(40)
 			 */
-				if ($newPostId = $this->PostsDAO->insertPost( $newPost ))
+				if ($newPostId = $this->PostsDAO->insert( $newPost ))
 					return ($newPostId);
 			}
 		}

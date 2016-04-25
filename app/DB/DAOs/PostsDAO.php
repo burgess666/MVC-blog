@@ -21,13 +21,15 @@ class PostsDAO {
 	}
 	public function insert($parametersArray) {
 		// insertion assumes that all the required parameters are defined and set
-		$sql = "INSERT INTO b_user (username, email, passwd) ";
-		$sql .= "VALUES (?,?,?) ";
+		$sql = "INSERT INTO b_post (user_id, posted_date,title, content) ";
+		$sql .= "VALUES (?,?,?,?) ";
 		
 		$stmt = $this->dbManager->prepareQuery ( $sql );
-		$this->dbManager->bindValue ( $stmt, 1, $parametersArray ["username"], $this->dbManager->STRING_TYPE );
-		$this->dbManager->bindValue ( $stmt, 2, $parametersArray ["email"], $this->dbManager->STRING_TYPE );
-		$this->dbManager->bindValue ( $stmt, 3, $parametersArray ["passwd"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 1, $parametersArray ["user_id"], $this->dbManager->INT_TYPE );
+		$this->dbManager->bindValue ( $stmt, 2, $parametersArray ["posted_date"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 3, $parametersArray ["title"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 4, $parametersArray ["content"], $this->dbManager->STRING_TYPE );
+		
 		$this->dbManager->executeQuery ( $stmt );
 		
 		return ($this->dbManager->getLastInsertedID ());
