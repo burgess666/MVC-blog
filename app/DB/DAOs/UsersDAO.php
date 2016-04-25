@@ -1,117 +1,77 @@
 <?php
-/**
- * @author Kaiqiang Huang
- * definition of the User DAO (database access object)
- */
-// Notice: the attribute of b_user table, user_id, has to be modified with auto_increment;
+
 class UsersDAO {
-	private $pdoDbManager;
-
+	private $dbManager;
 	function UsersDAO($DBMngr) {
-		$this->pdoDbManager = $DBMngr;
-		$this->pdoDbManager->openConnection();
+		$this->dbManager = $DBMngr;
 	}
-
-	function getUsers() {
+	public function get($id = null) {
 		$sql = "SELECT * ";
-		$sql .= "FROM b_user";
-		$sql .= "ORDER BY b_user.user_id; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery($sql);
-
-		$this->pdoDbManager->executeQuery ( $stmt );
-		$arrayOfResults = $this->pdoDbManager->fetchResults ( $stmt );
-
-		if (empty($arrayOfResults)) {
-			return null;
-		}
-
-		return $arrayOfResults;
+		$sql .= "FROM b_user ";
+		if ($id != null)
+			$sql .= "WHERE b_user.user_id=? ";
+		$sql .= "ORDER BY b_user.user_id ";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $id, $this->dbManager->INT_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
+		
+		return ($rows);
 	}
-
-	function getUser($id) {
-		$sql = "SELECT * ";
-		$sql .= "FROM b_user";
-		$sql .= "WHERE user_id = ?; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery ( $sql );
-
-		$this->pdoDbManager->bindValue($stmt, 1, $id, PDO::PARAM_INT);
-
-		$this->pdoDbManager->executeQuery ( $stmt );
-
-		$result = $this->pdoDbManager->getNextRow ( $stmt );
-
-		return $result;
+	public function insert($parametersArray) {
+		// insertion assumes that all the required parameters are defined and set
+		$sql = "INSERT INTO b_user (username, email, passwd) ";
+		$sql .= "VALUES (?,?,?) ";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $parametersArray ["username"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 2, $parametersArray ["email"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 3, $parametersArray ["passwd"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		
+		return ($this->dbManager->getLastInsertedID ());
 	}
-
-	function insertUser($params) {
-		//create an INSERT INTO sql statement (reads the parametersArray - this contains the fields submitted in the HTML5 form)
-
-		$username = $params['username'];
-		$email = $params['email'];
-		$passwd = $params['passwd'];
-
-		// preparing query
-		$sql = "INSERT INTO b_user (username, email, passwd) VALUES (?, ?, ?)";
-		$stmt = $this->pdoDbManager->prepareQuery($sql);
-
-		$this->pdoDbManager->bindValue($stmt, 1, $username, PDO::PARAM_STR);
-		$this->pdoDbManager->bindValue($stmt, 2, $email, PDO::PARAM_STR);
-		$this->pdoDbManager->bindValue($stmt, 3, $passwd, PDO::PARAM_STR);
-
-		// execute the query
-		$this->pdoDbManager->executeQuery($stmt);
+	public function update($parametersArray, $userID) {
+		// /create an UPDATE sql statement (reads the parametersArray - this contains the fields submitted in the HTML5 form)
+		$sql = "UPDATE b_user SET username = ?,email = ?, passwd = ? WHERE user_id = ?";
+		
+		$this->dbManager->openConnection ();
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $parametersArray ["username"], PDO::PARAM_STR );
+		$this->dbManager->bindValue ( $stmt, 2, $parametersArray ["email"], PDO::PARAM_STR );
+		$this->dbManager->bindValue ( $stmt, 3, $parametersArray ["passwd"], PDO::PARAM_STR );
+		$this->dbManager->bindValue ( $stmt, 4, $userID, PDO::PARAM_INT );
+		$this->dbManager->executeQuery ( $stmt );
+		
+		//check for number of affected rows
+		$rowCount = $this->dbManager->getNumberOfAffectedRows($stmt);
+		return ($rowCount);
 	}
-
-	function updateUser($id, $params) {
-		$sql = "UPDATE b_user ";
-		$sql .= "SET username = ?, email = ?, passwd = ?";
-		$sql .= "WHERE user_id = ?";
-
-		$username = $params['username'];
-		$email = $params['email'];
-		$passwd = $params['passwd'];
-
-		$stmt = $this->pdoDbManager->prepareQuery($sql);
-
-		$this->pdoDbManager->BindValue($stmt, 1, $username, PDO::PARAM_STR);
-		$this->pdoDbManager->BindValue($stmt, 2, $email, PDO::PARAM_STR);
-		$this->pdoDbManager->BindValue($stmt, 3, $passwd, PDO::PARAM_STR);
-
-		$this->pdoDbManager->executeQuery($stmt);
-	}
-
-	function deleteUser($id) {
+	public function delete($userID) {
 		$sql = "DELETE FROM b_user ";
-		$sql .= "WHERE user_id = ?; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery( $sql );
-
-		$this->pdoDbManager->bindValue($stmt, 1, $id, PDO::PARAM_INT);
-
-		$this->pdoDbManager->executeQuery( $stmt );
+		$sql .= "WHERE b_user.user_id = ?";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $userID, $this->dbManager->INT_TYPE );
+		
+		$this->dbManager->executeQuery ( $stmt );
+		$rowCount = $this->dbManager->getNumberOfAffectedRows ( $stmt );
+		return ($rowCount);
 	}
-
-	
-	function searchUsersByUserame($searchStr) {
-		$sql = "SELECT * FROM b_user WHERE username LIKE ? ; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery( $sql );
+	public function search($str) {
+		$sql = "SELECT * ";
+		$sql .= "FROM b_user ";
+		$sql .= "WHERE b_user.username LIKE CONCAT('%', ?, '%') ";
+		$sql .= "ORDER BY b_user.username ";
 		
-		$searchStr = "%" . $searchStr . "%";
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $str, $this->dbManager->STRING_TYPE );
 		
-		$this->pdoDbManager->bindValue($stmt, 1, $searchStr, PDO::PARAM_STR);
-
-		$this->pdoDbManager->executeQuery( $stmt );
-
-		$arrayOfResults = $this->pdoDbManager->fetchResults ( $stmt );
-
-		if (empty($arrayOfResults)) {
-			return null;
-		}
-
-		return $arrayOfResults;
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
+		
+		return ($rows);
 	}
 }
 ?>

@@ -1,9 +1,5 @@
 <?php
-/**
- * @author 	Kaiqiang Huang
- * @desc	This model handles for comment.
- *
- */
+
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/CommentsDAO.php";
 

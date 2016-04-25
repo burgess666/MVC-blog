@@ -1,9 +1,4 @@
 <?php
-/**
- * @author Kaiqiang Huang
- * definition of the Comment DAO (database access object)
- */
-
 class CommentsDAO {
 	private $pdoDbManager;
 

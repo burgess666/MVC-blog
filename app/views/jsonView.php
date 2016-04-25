@@ -1,9 +1,4 @@
 <?php
-/**
- * @author 	Kaiqiang Huang
- * @desc	view section
- *
- */
 class jsonView {
 	private $model, $controller, $slimApp;
 	public function __construct($controller, $model, $slimApp) {

@@ -1,9 +1,4 @@
 <?php
-/**
- * @author 	Kaiqiang Huang
- * @desc	This model handles for users.
- *
- */
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/UsersDAO.php";
 require_once "Validation.php";
@@ -18,7 +13,7 @@ class UserModel {
 		$this->dbmanager->openConnection ();
 		$this->validationSuite = new Validation ();
 	}
-	public function getUsers() {
+	public function get() {
 		return ($this->UsersDAO->get ());
 	}
 	public function getUser($userID) {
@@ -41,7 +36,9 @@ class UserModel {
 			 * the model knows the representation of a user in the database and this is: name: varchar(25) surname: varchar(25) email: varchar(50) password: varchar(40)
 			 */
 			
-			if (($this->validationSuite->isLengthStringValid ( $newUser ["username"], TABLE_USER_SURNAME_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $newUser ["email"], TABLE_USER_EMAIL_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $newUser ["passwd"], TABLE_USER_PASSWORD_LENGTH ))) {
+			if (($this->validationSuite->isLengthStringValid ( $newUser ["username"], TABLE_USER_SURNAME_LENGTH )) 
+					&& ($this->validationSuite->isLengthStringValid ( $newUser ["email"], TABLE_USER_EMAIL_LENGTH )) 
+					&& ($this->validationSuite->isLengthStringValid ( $newUser ["passwd"], TABLE_USER_PASSWORD_LENGTH ))) {
 				if ($newId = $this->UsersDAO->insert ( $newUser ))
 					return ($newId);
 			}
@@ -50,9 +47,10 @@ class UserModel {
 		// if validation fails or insertion fails
 		return (false);
 	}
+	
 	public function searchUsers($string) {
 		if (! empty ( $string )) {
-			$resultSet = $this->UsersDAO->searchUsersByUserame ( $string );
+			$resultSet = $this->UsersDAO->search ( $string );
 			return $resultSet;
 		}
 		
@@ -60,7 +58,7 @@ class UserModel {
 	}
 	public function deleteUser($userID) {
 		if (is_numeric ( $userID )) {
-			$deletedRows = $this->UsersDAO->deleteUser( $userID );
+			$deletedRows = $this->UsersDAO->delete ( $userID );
 			
 			if ($deletedRows > 0)
 				return (true);
@@ -74,7 +72,7 @@ class UserModel {
 				/*
 				 * the model knows the representation of a user in the database and this is: name: varchar(25) surname: varchar(25) email: varchar(50) password: varchar(40)
 				 */
-				if (($this->validationSuite->isLengthStringValid ( $userNewRepresentation ["username"], TABLE_USER_NAME_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $userNewRepresentation ["email"], TABLE_USER_EMAIL_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $userNewRepresentation ["passwd"], TABLE_USER_PASSWORD_LENGTH ))) {
+				if (($this->validationSuite->isLengthStringValid ( $userNewRepresentation ["username"], TABLE_USER_SURNAME_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $userNewRepresentation ["email"], TABLE_USER_EMAIL_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $userNewRepresentation ["passwd"], TABLE_USER_PASSWORD_LENGTH ))) {
 					$updatedRows = $this->UsersDAO->update ( $userNewRepresentation, $userID );
 					if ($updatedRows > 0)
 						return (true);

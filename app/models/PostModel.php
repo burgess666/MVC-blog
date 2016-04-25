@@ -1,9 +1,4 @@
 <?php
-/**
- * @author 	Kaiqiang Huang
- * @desc	This model handles for post.
- *
- */
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/PostsDAO.php";
 
@@ -18,12 +13,12 @@ class PostsModel {
 		$this->dbmanager->openConnection ();
 		$this->validationSuite = new Validation ();
 	}
-	public function getPosts() {
-		return ($this->PostsDAO -> getPosts());
+	public function get() {
+		return ($this->PostsDAO -> get());
 	}
 	public function getPost($post_id) {
 		if (is_numeric ( $post_id ))
-			return ($this->PostsDAO->getPost( $post_id ));
+			return ($this->PostsDAO->get( $post_id ));
 		
 		return false;
 	}
