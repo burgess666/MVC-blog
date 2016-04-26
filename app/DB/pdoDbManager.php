@@ -1,8 +1,4 @@
 <?php
-/**
- * @author luca
- * a basic implementation of a database manager
- */
 class pdoDbManager {
 	private $db_link;
 	private $hostname = DB_HOST;

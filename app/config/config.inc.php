@@ -68,7 +68,7 @@ define("GENERAL_RESOURCE_DELETED", "Resource has been deleted");
 define("GENERAL_FORBIDDEN", "Request is ok but action is forbidden");
 define("GENERAL_INVALIDBODY", "Request is ok but transmitted body is invalid");
 
-define("GENERAL_WELCOME_MESSAGE", "Welcome to DIT web-services");
+define("GENERAL_WELCOME_MESSAGE", "Welcome to Blog web-services");
 define("GENERAL_INVALIDROUTE", "Requested route does not exist");
 
 

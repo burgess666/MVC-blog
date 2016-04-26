@@ -1,5 +1,4 @@
 <?php
-
 class UsersDAO {
 	private $dbManager;
 	function UsersDAO($DBMngr) {
