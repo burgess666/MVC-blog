@@ -81,6 +81,19 @@ class UserModel {
 		}
 		return (false);
 	}
+	
+	public function getPostByUser($userID) {
+		if (is_numeric ( $userID ))
+			return ($this->UsersDAO->getPostsByUser( $userID ));
+			return false;
+	}
+	
+	public function getCommentsByUser($userID) {
+		if (is_numeric ( $userID ))
+			return ($this->UsersDAO->getCommentsByUser( $userID ));
+			return false;
+	}
+	
 	public function __destruct() {
 		$this->UsersDAO = null;
 		$this->dbmanager->closeConnection ();

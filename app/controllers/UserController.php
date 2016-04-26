@@ -31,6 +31,12 @@ class UserController {
 					$string = $parameteres ["username"];
 					$this->searchUsers ( $string );
 					break;
+				case ACTION_SEARCH_POSTSBYUSER :
+					$this->getPostByUser($id);
+					break;
+				case ACTION_SEARCH_COMMENTBYUSER :
+					$this->getCommentsByUser($id);
+					break;
 				case null :
 					$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
 					$Message = array (
@@ -67,6 +73,7 @@ class UserController {
 			$this->model->apiResponse = $Message;
 		}
 	}
+	
 	private function createNewUser($newUser) {
 		if ($newID = $this->model->createNewUser ( $newUser )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_CREATED );
@@ -113,6 +120,7 @@ class UserController {
 			$this->model->apiResponse = $Message;
 		}
 	}
+	
 	private function updateUser($userId, $userDetails) {
 		if ($this->model->updateUser ( $userId, $userDetails )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
@@ -125,6 +133,36 @@ class UserController {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_INVALIDBODY
+			);
+			$this->model->apiResponse = $Message;
+		}
+	}
+	
+	private function getPostByUser($userID) {
+		$answer = $this->model->getPostByUser( $userID );
+		if ($answer != null) {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
+			$this->model->apiResponse = $answer;
+		} else {
+	
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_NOCONTENT );
+			$Message = array (
+					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE
+			);
+			$this->model->apiResponse = $Message;
+		}
+	}
+	
+	private function getCommentsByUser($userID) {
+		$answer = $this->model->getCommentsByUser( $userID );
+		if ($answer != null) {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
+			$this->model->apiResponse = $answer;
+		} else {
+	
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_NOCONTENT );
+			$Message = array (
+					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE
 			);
 			$this->model->apiResponse = $Message;
 		}

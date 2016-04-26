@@ -58,6 +58,7 @@ class UsersDAO {
 		$rowCount = $this->dbManager->getNumberOfAffectedRows ( $stmt );
 		return ($rowCount);
 	}
+	
 	public function search($str) {
 		$sql = "SELECT * ";
 		$sql .= "FROM b_user ";
@@ -70,6 +71,34 @@ class UsersDAO {
 		$this->dbManager->executeQuery ( $stmt );
 		$rows = $this->dbManager->fetchResults ( $stmt );
 		
+		return ($rows);
+	}
+	
+	public function getPostsByUser($userID) {
+		//sql statement
+		$sql = "SELECT b_user.user_id,b_user.username, b_post.post_id, b_post.title, b_post.content, b_post.posted_date ";
+		$sql .= "FROM b_user JOIN b_post ON b_user.user_id = b_post.user_id ";
+		$sql .= " WHERE b_user.user_id = ? ";
+		$sql .= "ORDER BY b_post.post_id";
+		//prepare sql
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $userID, $this->dbManager->INT_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );	
+		return ($rows);
+	}
+	
+	public function getCommentsByUser($userID) {
+		//sql statement
+		$sql = "SELECT b_user.user_id,b_user.username, b_post.title, b_comment.comment_id, b_comment.content, b_comment.commented_date ";
+		$sql .= "FROM b_user JOIN b_comment JOIN b_post ON b_user.user_id = b_comment.user_id AND b_post.post_id = b_comment.post_id ";
+		$sql .= " WHERE b_user.user_id = ? ";
+		$sql .= "ORDER BY b_comment.comment_id";
+		//prepare sql
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $userID, $this->dbManager->INT_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
 		return ($rows);
 	}
 }

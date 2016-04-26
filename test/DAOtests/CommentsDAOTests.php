@@ -37,7 +37,7 @@ class CommentsDAOTests extends UnitTestCase {
 				"post_id" => "1" 
 		];
 		
-		$result = $this->commentsDAO->insertComment ( $params );
+		$result = $this->commentsDAO->insert( $params );
 		
 		// asserting that 1 row has been affected by insertion
 		$this->assertEqual ( $result, 1 );
@@ -49,7 +49,7 @@ class CommentsDAOTests extends UnitTestCase {
 	public function testReadComment() {
 		
 		// get comment by ID
-		$resultComment = $this->commentsDAO->getComment ( $this->id );
+		$resultComment = $this->commentsDAO->get( $this->id );
 		
 		$result = $resultComment ["comment_id"];
 		
@@ -65,7 +65,7 @@ class CommentsDAOTests extends UnitTestCase {
 				"content" => "Updated content text. ID: ".$this->id 
 		];
 		
-		$result = $this->commentsDAO->updateComment ( $this->id, $params );
+		$result = $this->commentsDAO->update( $this->id, $params );
 		
 		$this->assertEqual ( $result, 1 );
 	}
@@ -73,7 +73,7 @@ class CommentsDAOTests extends UnitTestCase {
 	 * Test to delete comment
 	 */
 	public function testDeleteComment() {
-		$result = $this->commentsDAO->deleteComment ( $this->id );
+		$result = $this->commentsDAO->delete( $this->id );
 		
 		$this->assertEqual ( $result, 1 );
 	}

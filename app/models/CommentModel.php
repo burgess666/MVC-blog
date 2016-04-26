@@ -75,6 +75,8 @@ class CommentModel {
 			}
 	}
 	
+	
+	
 	public function __destruct() {
 		$this->CommentsDAO = null;
 		$this->dbmanager->closeConnection ();

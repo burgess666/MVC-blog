@@ -75,6 +75,11 @@ class PostModel {
 		return (false);
 	}
 	
+	public function getCommentsByPost($postID) {
+		if (is_numeric ( $postID ))
+			return ($this->PostsDAO->getCommentsByPost( $postID ));
+			return false;
+	}
 	
 	public function __destruct() {
 		$this->PostsDAO = null;

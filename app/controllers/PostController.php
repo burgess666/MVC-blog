@@ -31,6 +31,9 @@ class PostController {
 					$string = $parameteres ["title"];
 					$this->searchPosts( $string );
 					break;
+				case ACTION_SEARCH_COMMENTBYPOST :
+					$this->getCommentsByPost($id);
+					break;
 				case null :
 					$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
 					$Message = array (
@@ -128,6 +131,21 @@ class PostController {
 					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE
 			);
 				
+			$this->model->apiResponse = $Message;
+		}
+	}
+	
+	private function getCommentsByPost($postID) {
+		$answer = $this->model->getCommentsByPost( $postID );
+		if ($answer != null) {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
+			$this->model->apiResponse = $answer;
+		} else {
+	
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_NOCONTENT );
+			$Message = array (
+					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE
+			);
 			$this->model->apiResponse = $Message;
 		}
 	}

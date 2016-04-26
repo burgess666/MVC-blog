@@ -51,6 +51,40 @@ $app->map ( "/users/search(/:string)", function ($searchString = null) use($app)
 	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET");
 
+$app->map ( "/users/:id/posts", function ($userid = null) use($app) {
+	$httpMethod = $app->request->getMethod ();
+	$action = null;
+	$parameters ["id"] = $userid;
+	
+	// prepare parameters to be passed to the controller (example: ID)
+	if (($userid == null) or is_numeric( $userid ))  {
+		switch ($httpMethod) {
+			case "GET" :
+				$action = ACTION_SEARCH_POSTSBYUSER;
+				break;
+			default :
+		}
+	}
+	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
+} )->via ( "GET");
+
+$app->map ( "/users/:id/comments", function ($userid = null) use($app) {
+	$httpMethod = $app->request->getMethod ();
+	$action = null;
+	$parameters ["id"] = $userid;
+
+	// prepare parameters to be passed to the controller (example: ID)
+	if (($userid == null) or is_numeric( $userid ))  {
+		switch ($httpMethod) {
+			case "GET" :
+				$action = ACTION_SEARCH_COMMENTBYUSER;
+				break;
+			default :
+		}
+	}
+	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
+} )->via ( "GET");
+
 $app->map ( "/posts(/:id)", function ($postID = null) use($app) {
 
 	$httpMethod = $app->request->getMethod ();
@@ -88,6 +122,21 @@ $app->map ( "/posts/search(/:string)", function ($searchString = null) use($app)
 		switch ($httpMethod) {
 			case "GET" :
 				$action = ACTION_SEARCH_POSTS;
+				break;
+			default :
+		}
+	}
+	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
+} )->via ( "GET");
+
+$app->map ( "/posts/:id/comments", function ($postid = null) use($app) {
+	$httpMethod = $app->request->getMethod ();
+	$action = null;
+	$parameters ["id"] = $postid;
+	if (($postid == null) or is_numeric( $postid ))  {
+		switch ($httpMethod) {
+			case "GET" :
+				$action = ACTION_SEARCH_COMMENTBYPOST;
 				break;
 			default :
 		}

@@ -18,6 +18,7 @@ class PostsDAO {
 		
 		return ($rows);
 	}
+	
 	public function insert($parametersArray) {
 		// insertion assumes that all the required parameters are defined and set
 		$sql = "INSERT INTO b_post (user_id, posted_date,title, content) ";
@@ -69,10 +70,23 @@ class PostsDAO {
 		
 		$stmt = $this->dbManager->prepareQuery ( $sql );
 		$this->dbManager->bindValue ( $stmt, 1, $str, $this->dbManager->STRING_TYPE );
-		
 		$this->dbManager->executeQuery ( $stmt );
 		$rows = $this->dbManager->fetchResults ( $stmt );
 		
+		return ($rows);
+	}
+	
+	public function getCommentsByPost($postID) {
+		//sql statement
+		$sql = "SELECT b_post.post_id,b_post.title, b_comment.comment_id, b_comment.content, b_comment.commented_date, b_comment.user_id ";
+		$sql .= "FROM b_comment JOIN b_post ON b_comment.post_id = b_post.post_id ";
+		$sql .= " WHERE b_post.post_id = ? ";
+		$sql .= "ORDER BY b_comment.comment_id";
+		//prepare sql
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $postID, $this->dbManager->INT_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
 		return ($rows);
 	}
 }
