@@ -31,8 +31,9 @@ class CommentsDAO {
 		$this->dbManager->bindValue ( $stmt, 4, $parametersArray ["content"], $this->dbManager->STRING_TYPE );
 		
 		$this->dbManager->executeQuery ( $stmt );
+		$rowCount = $this->dbManager->getNumberOfAffectedRows($stmt);
 		
-		return ($this->dbManager->getLastInsertedID ());
+		return $rowCount;
 	}
 	
 	public function update($parametersArray,$commentID) {
