@@ -1,5 +1,5 @@
 <?php
-class PostController {
+class CommentController {
 	private $slimApp;
 	private $model;
 	private $requestBody;
@@ -12,24 +12,24 @@ class PostController {
 			$id = $parameteres ["id"];
 
 			switch ($action) {
-				case ACTION_GET_POST :
-					$this->getPost ( $id );
+				case ACTION_GET_COMMENT :
+					$this->getComment ( $id );
 					break;
-				case ACTION_GET_POSTS :
-					$this->getPosts ();
+				case ACTION_GET_COMMENTS :
+					$this->getComments ();
 					break;
-				case ACTION_UPDATE_POST :
-					$this->updatePost ( $id, $this->requestBody );
+				case ACTION_UPDATE_COMMENT :
+					$this->updateComment ( $id, $this->requestBody );
 					break;
-				case ACTION_CREATE_POST :
-					$this->createNewPost ( $this->requestBody );
+				case ACTION_CREATE_COMMENT :
+					$this->createNewComment ( $this->requestBody );
 					break;
-				case ACTION_DELETE_POST :
-					$this->deletePost ( $id );
+				case ACTION_DELETE_COMMENT :
+					$this->deleteComment ( $id );
 					break;
-				case ACTION_SEARCH_POSTS :
-					$string = $parameteres ["title"];
-					$this->searchPosts( $string );
+				case ACTION_SEARCH_COMMENTS :
+					$string = $parameteres ["content"];
+					$this->searchComments( $string );
 					break;
 				case null :
 					$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
@@ -40,8 +40,8 @@ class PostController {
 					break;
 			}
 	}
-	private function getPosts() {
-		$answer = $this->model->get();
+	private function getComments() {
+		$answer = $this->model->getComments();
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$this->model->apiResponse = $answer;
@@ -53,8 +53,8 @@ class PostController {
 			$this->model->apiResponse = $Message;
 		}
 	}
-	private function getPost($postID) {
-		$answer = $this->model->getPost ( $postID );
+	private function getComment($commentID) {
+		$answer = $this->model->getComment ( $commentID );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$this->model->apiResponse = $answer;
@@ -67,12 +67,12 @@ class PostController {
 			$this->model->apiResponse = $Message;
 		}
 	}
-	private function createNewPost($newPost) {
-		if ($newID = $this->model->createNewPost ( $newPost )) {
+	private function createNewComment($newComment) {
+		if ($newID = $this->model->createNewComment ( $newComment )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_CREATED );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_CREATED,
-					"post_id" => "$newID"
+					"COMMENT_id" => "$newID"
 			);
 			$this->model->apiResponse = $Message;
 		} else {
@@ -84,12 +84,12 @@ class PostController {
 		}
 	}
 	
-	private function updatePost($postId, $postDetails) {
-		if ($this->model->updatePost ( $postId, $postDetails )) {
+	private function updateComment($commentId, $commentDetails) {
+		if ($this->model->updateComment ( $commentId, $commentDetails )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_UPDATED,
-					"updatedID" => "$postId"
+					"updatedID" => "$commentId"
 			);
 			$this->model->apiResponse = $Message;
 		} else {
@@ -101,8 +101,8 @@ class PostController {
 		}
 	}
 	
-	private function deletePost($postId) {
-		if ($this->model->deletePost( $postId )) {
+	private function deleteComment($commentID) {
+		if ($this->model->deleteComment( $commentID )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_DELETED
@@ -117,8 +117,8 @@ class PostController {
 		}
 	}
 	
-	private function searchPosts($string) {
-		$answer = $this->model->searchPostsByTitle ( $string );
+	private function searchComments($string) {
+		$answer = $this->model->searchCommentsByContent ( $string );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$this->model->apiResponse = $answer;

@@ -1,5 +1,5 @@
 <?php
-class PostController {
+class UserController {
 	private $slimApp;
 	private $model;
 	private $requestBody;
@@ -12,24 +12,24 @@ class PostController {
 			$id = $parameteres ["id"];
 
 			switch ($action) {
-				case ACTION_GET_POST :
-					$this->getPost ( $id );
+				case ACTION_GET_USER :
+					$this->getUser ( $id );
 					break;
-				case ACTION_GET_POSTS :
-					$this->getPosts ();
+				case ACTION_GET_USERS :
+					$this->getUsers ();
 					break;
-				case ACTION_UPDATE_POST :
-					$this->updatePost ( $id, $this->requestBody );
+				case ACTION_UPDATE_USER :
+					$this->updateUser ( $id, $this->requestBody );
 					break;
-				case ACTION_CREATE_POST :
-					$this->createNewPost ( $this->requestBody );
+				case ACTION_CREATE_USER :
+					$this->createNewUser ( $this->requestBody );
 					break;
-				case ACTION_DELETE_POST :
-					$this->deletePost ( $id );
+				case ACTION_DELETE_USER :
+					$this->deleteUser ( $id );
 					break;
-				case ACTION_SEARCH_POSTS :
-					$string = $parameteres ["title"];
-					$this->searchPosts( $string );
+				case ACTION_SEARCH_USERS :
+					$string = $parameteres ["username"];
+					$this->searchUsers ( $string );
 					break;
 				case null :
 					$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
@@ -40,7 +40,7 @@ class PostController {
 					break;
 			}
 	}
-	private function getPosts() {
+	private function getUsers() {
 		$answer = $this->model->get();
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
@@ -53,8 +53,8 @@ class PostController {
 			$this->model->apiResponse = $Message;
 		}
 	}
-	private function getPost($postID) {
-		$answer = $this->model->getPost ( $postID );
+	private function getUser($userID) {
+		$answer = $this->model->getUser ( $userID );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$this->model->apiResponse = $answer;
@@ -67,12 +67,12 @@ class PostController {
 			$this->model->apiResponse = $Message;
 		}
 	}
-	private function createNewPost($newPost) {
-		if ($newID = $this->model->createNewPost ( $newPost )) {
+	private function createNewUser($newUser) {
+		if ($newID = $this->model->createNewUser ( $newUser )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_CREATED );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_CREATED,
-					"post_id" => "$newID"
+					"user_id" => "$newID"
 			);
 			$this->model->apiResponse = $Message;
 		} else {
@@ -84,25 +84,8 @@ class PostController {
 		}
 	}
 	
-	private function updatePost($postId, $postDetails) {
-		if ($this->model->updatePost ( $postId, $postDetails )) {
-			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
-			$Message = array (
-					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_UPDATED,
-					"updatedID" => "$postId"
-			);
-			$this->model->apiResponse = $Message;
-		} else {
-			$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
-			$Message = array (
-					GENERAL_MESSAGE_LABEL => GENERAL_INVALIDBODY
-			);
-			$this->model->apiResponse = $Message;
-		}
-	}
-	
-	private function deletePost($postId) {
-		if ($this->model->deletePost( $postId )) {
+	private function deleteUser($userId) {
+		if ($this->model->deleteUser ( $userId )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_DELETED
@@ -116,9 +99,8 @@ class PostController {
 			$this->model->apiResponse = $Message;
 		}
 	}
-	
-	private function searchPosts($string) {
-		$answer = $this->model->searchPostsByTitle ( $string );
+	private function searchUsers($string) {
+		$answer = $this->model->searchUsers ( $string );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$this->model->apiResponse = $answer;
@@ -128,6 +110,22 @@ class PostController {
 					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE
 			);
 				
+			$this->model->apiResponse = $Message;
+		}
+	}
+	private function updateUser($userId, $userDetails) {
+		if ($this->model->updateUser ( $userId, $userDetails )) {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
+			$Message = array (
+					GENERAL_MESSAGE_LABEL => GENERAL_RESOURCE_UPDATED,
+					"updatedID" => "$userId"
+			);
+			$this->model->apiResponse = $Message;
+		} else {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
+			$Message = array (
+					GENERAL_MESSAGE_LABEL => GENERAL_INVALIDBODY
+			);
 			$this->model->apiResponse = $Message;
 		}
 	}

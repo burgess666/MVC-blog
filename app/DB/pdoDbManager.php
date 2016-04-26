@@ -1,11 +1,5 @@
 <?php
-/**
- * @author luca
- * a basic implementation of a database manager usng the PDO php object
- */
-
-class pdoDbManager{
-
+class pdoDbManager {
 	private $db_link;
 	private $hostname = DB_HOST;
 	private $username = DB_USER;
@@ -13,52 +7,48 @@ class pdoDbManager{
 	private $dbname = DB_NAME;
 	private $charset = DB_CHARSET;
 	private $debugMode = DB_DEBUGMODE;
-	private $dbVendor = DB_VENDOR; 
-
 	public $INT_TYPE = PDO::PARAM_INT;
 	public $STRING_TYPE = PDO::PARAM_STR;
-
-	function __construct(){
+	function __construct() {
 	}
-
-	function openConnection(){
+	function openConnection() {
 		try {
-			// mysql:host=localhost:3320
-			$connectionStr = $this->dbVendor . ":host=" . $this->hostname . ":3320;dbname=" . $this->dbname . ";charset=" . $this->charset;
-			$this->db_link = new PDO($connectionStr, $this->username, $this->password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
-		}
-		catch (PDOException $e) {
-			if($this->debugMode){
-				echo 'Connection failed: ' . $e->getMessage();
+			$connectionStr = "mysql:host=" . $this->hostname . ";dbname=" . $this->dbname . ";charset=" . $this->charset;
+			$this->db_link = new PDO ( $connectionStr, $this->username, $this->password, array (
+					PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING 
+			) );
+		} catch ( PDOException $e ) {
+			if ($this->debugMode) {
+				echo 'Connection failed: ' . $e->getMessage ();
 			}
-			exit;
+			exit ();
 		}
 	}
-
-	function prepareQuery($query){
-		$stmt = $this->db_link->prepare($query);
+	function prepareQuery($query) {
+		$stmt = $this->db_link->prepare ( $query );
 		return $stmt;
 	}
-
-	function bindValue($stmt, $pos, $value, $type){
-		$stmt->bindValue($pos, $value, $type);
+	function bindValue($stmt, $pos, $value, $type) {
+		$stmt->bindValue ( $pos, $value, $type );
 	}
-
-	function executeQuery($stmt){
-		$stmt->execute();
+	function executeQuery($stmt) {
+		$stmt->execute ();
 	}
-
-	function fetchResults($stmt){
-		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	function fetchResults($stmt) {
+		$rows = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		return ($rows);
 	}
-
-	function getNextRow($stmt){
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	function getNextRow($stmt) {
+		$result = $stmt->fetch ( PDO::FETCH_ASSOC );
 		return ($result);
 	}
-
-	function closeConnection(){
+	function getLastInsertedID() {
+		return ($this->db_link->lastInsertId ());
+	}
+	function getNumberOfAffectedRows($stmt) {
+		return ($stmt->rowCount ());
+	}
+	function closeConnection() {
 		$this->db_link = null;
 	}
 }
