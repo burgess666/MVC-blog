@@ -35,6 +35,21 @@ $app->map ( "/posts(/:id)", function ($postID = null) use($app) {
 	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
+$app->map ( "/posts/search(/:string)", function ($searchString = null) use($app) {
+	$httpMethod = $app->request->getMethod ();
+	$action = null;
+	$parameters ["title"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
+	if (($searchString == null) or is_string( $searchString )) {
+		switch ($httpMethod) {
+			case "GET" :
+				$action = ACTION_SEARCH_POSTS;
+				break;
+			default :
+		}
+	}
+	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
+} )->via ( "GET");
+
 $app->run ();
 
 

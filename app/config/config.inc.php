@@ -1,7 +1,7 @@
 <?php
 /* database constants */
-define("DB_HOST", "83.212.126.75" ); 		// set database host
-define("DB_USER", "user" ); 			// set database user
+define("DB_HOST", "83.212.82.15" ); 		// set database host
+define("DB_USER", "root" ); 			// set database user
 define("DB_PASS", "123456" ); 				// set database password
 define("DB_PORT", 3306);				// set database port
 define("DB_NAME", "blog" ); 			// set database name

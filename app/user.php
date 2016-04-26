@@ -35,9 +35,22 @@ $app->map ( "/users(/:id)", function ($userID = null) use($app) {
 	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
+
+$app->map ( "/users/search(/:string)", function ($searchString = null) use($app) {
+	$httpMethod = $app->request->getMethod ();
+	$action = null;
+	$parameters ["username"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
+	if (($searchString == null) or is_string( $searchString )) {
+		switch ($httpMethod) {
+			case "GET" :
+				$action = ACTION_SEARCH_USERS;
+				break;
+			default :
+		}
+	}
+	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
+} )->via ( "GET");
 $app->run ();
-
-
 
 class loadRunMVCComponents {
 	public $model, $controller, $view;

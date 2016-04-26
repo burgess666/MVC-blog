@@ -41,9 +41,25 @@ class PostModel {
 			}
 		}
 		
+	public function updatePost($postID, $postNewRepresentation) {
+			if (! empty ( $postID ) && is_numeric ( $postID )) {
+				// compulsory values
+				if (! empty ( $postNewRepresentation ["user_id"] )
+						&&! empty ( $postNewRepresentation ["posted_date"] )
+						&& ! empty ( $postNewRepresentation ["title"] )
+						&& ! empty ( $postNewRepresentation ["content"] )) {
+		
+							$updatedRows = $this->PostsDAO-> update($postNewRepresentation, $postID);
+							if ($updatedRows > 0)
+								return (true);
+						}
+			}
+		}
+		
+		
 	public function searchPostsByTitle($post_title) {
 		if (! empty ( $post_title )) {
-			$resultSet = $this->PostsDAO-> searchPostsByTitle( $post_title );
+			$resultSet = $this->PostsDAO-> search( $post_title );
 			return $resultSet;
 		}
 		return false;
@@ -51,7 +67,7 @@ class PostModel {
 	
 	public function deletePost($postID) {
 		if (is_numeric ( $postID )) {
-			$deletedRows = $this->PostsDAO-> deletePost( $postID );
+			$deletedRows = $this->PostsDAO->delete( $postID );
 			
 			if ($deletedRows > 0)
 				return (true);
@@ -59,19 +75,6 @@ class PostModel {
 		return (false);
 	}
 	
-	public function updatePost($postID, $postNewRepresentation) {
-		if (! empty ( $postID ) && is_numeric ( $postID )) {
-			// compulsory values
-			if (! empty ( $postNewRepresentation ["posted_date"] ) 
-					&& ! empty ( $postNewRepresentation ["title"] ) 
-					&& ! empty ( $postNewRepresentation ["content"] )) {
-						
-					$updatedRows = $this->PostsDAO-> updatePost( $postID, $postNewRepresentation );
-					if ($updatedRows > 0)
-						return (true);
-				}
-			}
-	}
 	
 	public function __destruct() {
 		$this->PostsDAO = null;

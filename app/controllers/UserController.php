@@ -28,7 +28,7 @@ class UserController {
 					$this->deleteUser ( $id );
 					break;
 				case ACTION_SEARCH_USERS :
-					$string = $parameteres ["SearchingString"];
+					$string = $parameteres ["username"];
 					$this->searchUsers ( $string );
 					break;
 				case null :
@@ -83,10 +83,8 @@ class UserController {
 			$this->model->apiResponse = $Message;
 		}
 	}
+	
 	private function deleteUser($userId) {
-		//$isSuccessfull = $this->model->deleteUser ( $userId );
-		//var_dump($isSuccessfull);
-		//die($isSuccessfull);
 		if ($this->model->deleteUser ( $userId )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$Message = array (
