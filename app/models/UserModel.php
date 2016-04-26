@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ *
+ * 	user model
+ *
+ */
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/UsersDAO.php";
 require_once "Validation.php";

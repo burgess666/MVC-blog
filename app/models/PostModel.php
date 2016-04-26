@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Rich Murphy
+ *
+ * 	Post model
+ *
+ */
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/PostsDAO.php";
 require_once "Validation.php";

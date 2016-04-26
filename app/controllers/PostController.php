@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Rich Murphy
+ *
+ * 	Comment controller
+ *
+ */
 class PostController {
 	private $slimApp;
 	private $model;

@@ -1,4 +1,8 @@
 <?php
+/*
+ * configuration file
+ */
+
 /* database constants */
 define("DB_HOST", "83.212.82.15" ); 		// set database host
 define("DB_USER", "root" ); 			// set database user

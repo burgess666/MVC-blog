@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ * 
+ * 	Comment controller
+ * 
+ */
 class CommentController {
 	private $slimApp;
 	private $model;

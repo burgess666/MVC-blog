@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ *
+ * 	Comment DAO
+ *
+ */
 class CommentsDAO {
 	private $dbManager;
 	function CommentsDAO($DBMngr) {

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ *
+ * 	User controller
+ *
+ */
 class UsersDAO {
 	private $dbManager;
 	function UsersDAO($DBMngr) {

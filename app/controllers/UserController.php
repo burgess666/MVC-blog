@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ *
+ * 	User controller
+ *
+ */
 class UserController {
 	private $slimApp;
 	private $model;

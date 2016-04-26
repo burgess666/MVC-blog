@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ *
+ * 	Initial route with MVC framework
+ *
+ */
 require_once "../Slim/Slim.php";
 Slim\Slim::registerAutoloader ();
 

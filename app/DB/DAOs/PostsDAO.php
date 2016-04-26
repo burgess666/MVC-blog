@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author Rich Murphy
+ *
+ * 	Post DAO
+ *
+ */
 class PostsDAO {
 	private $dbManager;
 	function PostsDAO($DBMngr) {
