@@ -5,6 +5,7 @@
  * 	Post model
  *
  */
+//require 
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/PostsDAO.php";
 require_once "Validation.php";
@@ -20,9 +21,13 @@ class PostModel {
 		$this->dbmanager->openConnection ();
 		$this->validationSuite = new Validation ();
 	}
+	
+	// get post
 	public function get() {
 		return ($this->PostsDAO -> get());
 	}
+	
+	//get post with post id
 	public function getPost($post_id) {
 		if (is_numeric ( $post_id ))
 			return ($this->PostsDAO->get( $post_id ));
@@ -34,19 +39,18 @@ class PostModel {
 	 * @param array $PostRepresentation:
 	 *        	an associative array containing the detail of the new post
 	 */
+	//create new post
 	public function createNewPost($newPost) {
 		// validation of the values of the new post
-		
-		// compulsory values
-		if (! empty ( $newPost ["user_id"] ) && ! empty ( $newPost ["posted_date"] ) && ! empty ( $newPost ["title"] ) && ! empty ( $newPost ["content"] )) {
-			/*
-			 * the model knows the representation of a post in the database and this is: name: varchar(25) surname: varchar(25) email: varchar(50) password: varchar(40)
-			 */
+		if (! empty ( $newPost ["user_id"] ) && ! empty ( $newPost ["posted_date"] ) 
+			&& ! empty ( $newPost ["title"] ) 
+			&& ! empty ( $newPost ["content"] )) {
 				if ($newPostId = $this->PostsDAO->insert( $newPost ))
 					return ($newPostId);
 			}
 		}
 		
+	//update post 
 	public function updatePost($postID, $postNewRepresentation) {
 			if (! empty ( $postID ) && is_numeric ( $postID )) {
 				// compulsory values
@@ -55,14 +59,14 @@ class PostModel {
 						&& ! empty ( $postNewRepresentation ["title"] )
 						&& ! empty ( $postNewRepresentation ["content"] )) {
 		
-							$updatedRows = $this->PostsDAO-> update($postNewRepresentation, $postID);
-							if ($updatedRows > 0)
-								return (true);
-						}
+					$updatedRows = $this->PostsDAO-> update($postNewRepresentation, $postID);
+					if ($updatedRows > 0)
+						return (true);
+					}
 			}
 		}
 		
-		
+	// search post with sililar title
 	public function searchPostsByTitle($post_title) {
 		if (! empty ( $post_title )) {
 			$resultSet = $this->PostsDAO-> search( $post_title );
@@ -71,6 +75,7 @@ class PostModel {
 		return false;
 	}
 	
+	//delete post
 	public function deletePost($postID) {
 		if (is_numeric ( $postID )) {
 			$deletedRows = $this->PostsDAO->delete( $postID );
@@ -81,9 +86,10 @@ class PostModel {
 		return (false);
 	}
 	
-	public function getCommentsByPost($postID) {
-		if (is_numeric ( $postID ))
-			return ($this->PostsDAO->getCommentsByPost( $postID ));
+	//search post with related user id
+	public function getPostByUser($userID) {
+		if (is_numeric ( $userID ))
+			return ($this->PostsDAO->getPostsByUser( $userID ));
 			return false;
 	}
 	

@@ -9,6 +9,8 @@ class PostController {
 	private $slimApp;
 	private $model;
 	private $requestBody;
+	
+	//construction method
 	public function __construct($model, $action = null, $slimApp, $parameteres = null) {
 		$this->model = $model;
 		$this->slimApp = $slimApp;
@@ -37,8 +39,8 @@ class PostController {
 					$string = $parameteres ["title"];
 					$this->searchPosts( $string );
 					break;
-				case ACTION_SEARCH_COMMENTBYPOST :
-					$this->getCommentsByPost($id);
+				case ACTION_SEARCH_POSTSBYUSER :
+					$this->getPostByUser($id);
 					break;
 				case null :
 					$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
@@ -49,7 +51,9 @@ class PostController {
 					break;
 			}
 	}
+	
 	private function getPosts() {
+		//call get method from postmodel
 		$answer = $this->model->get();
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
@@ -63,6 +67,7 @@ class PostController {
 		}
 	}
 	private function getPost($postID) {
+		//call getpost method with id method from postmodel
 		$answer = $this->model->getPost ( $postID );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
@@ -77,6 +82,7 @@ class PostController {
 		}
 	}
 	private function createNewPost($newPost) {
+		//call create post method from postmodel
 		if ($newID = $this->model->createNewPost ( $newPost )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_CREATED );
 			$Message = array (
@@ -94,6 +100,7 @@ class PostController {
 	}
 	
 	private function updatePost($postId, $postDetails) {
+		//call update post method from postmodel
 		if ($this->model->updatePost ( $postId, $postDetails )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$Message = array (
@@ -111,6 +118,7 @@ class PostController {
 	}
 	
 	private function deletePost($postId) {
+		//call delete post method from postmodel
 		if ($this->model->deletePost( $postId )) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$Message = array (
@@ -127,6 +135,7 @@ class PostController {
 	}
 	
 	private function searchPosts($string) {
+		//call search post method from postmodel
 		$answer = $this->model->searchPostsByTitle ( $string );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
@@ -141,13 +150,13 @@ class PostController {
 		}
 	}
 	
-	private function getCommentsByPost($postID) {
-		$answer = $this->model->getCommentsByPost( $postID );
+	private function getPostByUser($userID) {
+		//call get post by user id method from postmodel
+		$answer = $this->model->getPostByUser( $userID );
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			$this->model->apiResponse = $answer;
 		} else {
-	
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_NOCONTENT );
 			$Message = array (
 					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE

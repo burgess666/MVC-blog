@@ -1,4 +1,5 @@
 <?php
+// PHP data object for database management
 class pdoDbManager {
 	private $db_link;
 	private $hostname = DB_HOST;
