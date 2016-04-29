@@ -6,7 +6,18 @@ $app = new \Slim\Slim (); // slim run-time object
 
 require_once "config/config.inc.php";
 
-$app->map ( "/users(/:id)", function ($userID = null) use($app) {
+// middleware route for authentication
+function authenticate(\Slim\Route $route) {
+	$app = \Slim\Slim::getInstance ();
+	
+	$action = ACTION_VALIDATE_USER;
+	
+	$mvc = new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app );
+
+	return true;
+}
+
+$app->map ( "/users(/:id)", 'authenticate', function ($userID = null) use ($app) {
 	
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
@@ -35,12 +46,11 @@ $app->map ( "/users(/:id)", function ($userID = null) use($app) {
 	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
-
-$app->map ( "/users/search(/:string)", function ($searchString = null) use($app) {
+$app->map ( "/users/search(/:string)", 'authenticate', function ($searchString = null) use ($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["username"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
-	if (($searchString == null) or is_string( $searchString )) {
+	if (($searchString == null) or is_string ( $searchString )) {
 		switch ($httpMethod) {
 			case "GET" :
 				$action = ACTION_SEARCH_USERS;
@@ -49,9 +59,9 @@ $app->map ( "/users/search(/:string)", function ($searchString = null) use($app)
 		}
 	}
 	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
-} )->via ( "GET");
+} )->via ( "GET" );
 
-$app->map ( "/users/:id/posts", function ($userid = null) use($app) {
+$app->map ( "/users/:id/posts", 'authenticate', function ($userid = null) use($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["id"] = $userid;
@@ -68,7 +78,7 @@ $app->map ( "/users/:id/posts", function ($userid = null) use($app) {
 	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET");
 
-$app->map ( "/users/:id/comments", function ($userid = null) use($app) {
+$app->map ( "/users/:id/comments", 'authenticate', function ($userid = null) use($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["id"] = $userid;
@@ -85,20 +95,20 @@ $app->map ( "/users/:id/comments", function ($userid = null) use($app) {
 	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET");
 
-$app->map ( "/posts(/:id)", function ($postID = null) use($app) {
-
+$app->map ( "/posts(/:id)", 'authenticate', function ($postID = null) use ($app) {
+	
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["id"] = $postID; // prepare parameters to be passed to the controller (example: ID)
-
+	
 	if (($postID == null) or is_numeric ( $postID )) {
 		switch ($httpMethod) {
 			case "GET" :
 				if ($postID != null)
 					$action = ACTION_GET_POST;
-					else
-						$action = ACTION_GET_POSTS;
-						break;
+				else
+					$action = ACTION_GET_POSTS;
+				break;
 			case "POST" :
 				$action = ACTION_CREATE_POST;
 				break;
@@ -114,11 +124,11 @@ $app->map ( "/posts(/:id)", function ($postID = null) use($app) {
 	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
-$app->map ( "/posts/search(/:string)", function ($searchString = null) use($app) {
+$app->map ( "/posts/search(/:string)", 'authenticate', function ($searchString = null) use ($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["title"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
-	if (($searchString == null) or is_string( $searchString )) {
+	if (($searchString == null) or is_string ( $searchString )) {
 		switch ($httpMethod) {
 			case "GET" :
 				$action = ACTION_SEARCH_POSTS;
@@ -127,9 +137,9 @@ $app->map ( "/posts/search(/:string)", function ($searchString = null) use($app)
 		}
 	}
 	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
-} )->via ( "GET");
+} )->via ( "GET" );
 
-$app->map ( "/posts/:id/comments", function ($postid = null) use($app) {
+$app->map ( "/posts/:id/comments", 'authenticate', function ($postid = null) use($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["id"] = $postid;
@@ -144,20 +154,20 @@ $app->map ( "/posts/:id/comments", function ($postid = null) use($app) {
 	return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET");
 
-$app->map ( "/comments(/:id)", function ($commentID = null) use($app) {
-
+$app->map ( "/comments(/:id)", 'authenticate', function ($commentID = null) use ($app) {
+	
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["id"] = $commentID; // prepare parameters to be passed to the controller (example: ID)
-
+	
 	if (($commentID == null) or is_numeric ( $commentID )) {
 		switch ($httpMethod) {
 			case "GET" :
 				if ($commentID != null)
 					$action = ACTION_GET_COMMENT;
-					else
-						$action = ACTION_GET_COMMENTS;
-						break;
+				else
+					$action = ACTION_GET_COMMENTS;
+				break;
 			case "POST" :
 				$action = ACTION_CREATE_COMMENT;
 				break;
@@ -173,11 +183,11 @@ $app->map ( "/comments(/:id)", function ($commentID = null) use($app) {
 	return new loadRunMVCComponents ( "CommentModel", "CommentController", "jsonView", $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
-$app->map ( "/comments/search(/:string)", function ($searchString = null) use($app) {
+$app->map ( "/comments/search(/:string)", 'authenticate', function ($searchString = null) use ($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["content"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
-	if (($searchString == null) or is_string( $searchString )) {
+	if (($searchString == null) or is_string ( $searchString )) {
 		switch ($httpMethod) {
 			case "GET" :
 				$action = ACTION_SEARCH_COMMENTS;
@@ -186,9 +196,8 @@ $app->map ( "/comments/search(/:string)", function ($searchString = null) use($a
 		}
 	}
 	return new loadRunMVCComponents ( "CommentModel", "CommentController", "jsonView", $action, $app, $parameters );
-} )->via ( "GET");
+} )->via ( "GET" );
 $app->run ();
-
 class loadRunMVCComponents {
 	public $model, $controller, $view;
 	public function __construct($modelName, $controllerName, $viewName, $action, $app, $parameters = null) {
