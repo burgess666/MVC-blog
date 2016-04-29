@@ -6,6 +6,7 @@
  *
  */
 class PostController {
+	
 	private $slimApp;
 	private $model;
 	private $requestBody;

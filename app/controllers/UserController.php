@@ -6,6 +6,7 @@
  *
  */
 class UserController {
+	
 	private $slimApp;
 	private $model;
 	private $requestBody;

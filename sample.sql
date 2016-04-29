@@ -1,3 +1,6 @@
+--GRANT ALL PRIVILEGES ON *.* TO 'user'@'83.212.82.15' IDENTIFIED BY '123456';
+-- FLUSH PRIVILEGES;
+
 use blog;
 describe b_comment;
 describe b_post;

@@ -6,9 +6,12 @@
  * 
  */
 class CommentController {
+	
 	private $slimApp;
 	private $model;
 	private $requestBody;
+	
+	//construction methods
 	public function __construct($model, $action = null, $slimApp, $parameteres = null) {
 		$this->model = $model;
 		$this->slimApp = $slimApp;

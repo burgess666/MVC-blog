@@ -12,13 +12,14 @@ require_once "config/config.inc.php";
 
 $contentType = strtolower($app->request->headers->get("content-type"));
 
-if($contentType == "json")
+if($contentType == "json" || $contentType == "")
 {
 	$app->map ( "/users(/:id)", function ($userID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
-		$parameters ["id"] = $userID; // prepare parameters to be passed to the controller (example: ID)
+		// prepare parameters to be passed to the controller
+		$parameters ["id"] = $userID;
 	
 		if (($userID == null) or is_numeric ( $userID )) {
 			switch ($httpMethod) {
