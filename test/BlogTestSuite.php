@@ -11,7 +11,7 @@ class BlogTestSuite extends TestSuite {
 		$this->slimApp = new \Slim\Slim (); // slim run-time object
 		require_once "config/config.inc.php";
 				
-		$this->addFile ( 'DAOtests/CommentsDAOTests.php' );
+		$this->addFile ('DAOtests/CommentsDAOTests.php');
 		$this->addFile ('DAOtests/UsersDAOTests.php');
 	}
 }
