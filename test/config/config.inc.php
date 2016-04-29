@@ -4,7 +4,7 @@ define("DB_HOST", "83.212.82.15" ); 		// set database host
 define("DB_USER", "root" ); 			// set database user
 define("DB_PASS", "123456" ); 				// set database password
 define("DB_PORT", 3306);				// set database port
-define("DB_NAME", "blog" ); 			// set database name
+define("DB_NAME", "testblog" ); 			// set database name
 define("DB_CHARSET", "utf8" ); 			// set database charset
 define("DB_DEBUGMODE", true ); 			// set database charset
 
@@ -15,7 +15,6 @@ define("ACTION_CREATE_USER", 55);
 define("ACTION_UPDATE_USER", 66);
 define("ACTION_DELETE_USER", 77);
 define("ACTION_SEARCH_USERS", 88);
-define("ACTION_VALIDATE_USER", 99);
 
 define("ACTION_GET_POST", 333);
 define("ACTION_GET_POSTS", 444);

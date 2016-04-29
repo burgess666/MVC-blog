@@ -22,6 +22,16 @@ class UserModel {
 		
 		return false;
 	}
+	
+	// authenticate user
+	public function authUser($uname, $pid) {
+		// is alphanumeric username
+		if (ctype_alnum( $uname )) { 
+			return ($this->UsersDAO->getUser ( $uname, $pid ));
+		}
+		return false;
+	}
+	
 	/**
 	 *
 	 * @param array $UserRepresentation:
@@ -36,9 +46,7 @@ class UserModel {
 			 * the model knows the representation of a user in the database and this is: name: varchar(25) surname: varchar(25) email: varchar(50) password: varchar(40)
 			 */
 			
-			if (($this->validationSuite->isLengthStringValid ( $newUser ["username"], TABLE_USER_SURNAME_LENGTH )) 
-					&& ($this->validationSuite->isLengthStringValid ( $newUser ["email"], TABLE_USER_EMAIL_LENGTH )) 
-					&& ($this->validationSuite->isLengthStringValid ( $newUser ["passwd"], TABLE_USER_PASSWORD_LENGTH ))) {
+			if (($this->validationSuite->isLengthStringValid ( $newUser ["username"], TABLE_USER_SURNAME_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $newUser ["email"], TABLE_USER_EMAIL_LENGTH )) && ($this->validationSuite->isLengthStringValid ( $newUser ["passwd"], TABLE_USER_PASSWORD_LENGTH ))) {
 				if ($newId = $this->UsersDAO->insert ( $newUser ))
 					return ($newId);
 			}
@@ -47,7 +55,6 @@ class UserModel {
 		// if validation fails or insertion fails
 		return (false);
 	}
-	
 	public function searchUsers($string) {
 		if (! empty ( $string )) {
 			$resultSet = $this->UsersDAO->search ( $string );

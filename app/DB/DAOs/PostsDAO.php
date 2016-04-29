@@ -1,5 +1,4 @@
 <?php
-
 class PostsDAO {
 	private $dbManager;
 	function PostsDAO($DBMngr) {

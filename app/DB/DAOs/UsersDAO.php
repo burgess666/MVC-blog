@@ -1,5 +1,4 @@
 <?php
-
 class UsersDAO {
 	private $dbManager;
 	function UsersDAO($DBMngr) {
@@ -18,6 +17,16 @@ class UsersDAO {
 		$rows = $this->dbManager->fetchResults ( $stmt );
 		
 		return ($rows);
+	}
+	public function getUser($uid, $pid) {
+		$sql = "SELECT * FROM b_user ";
+		$sql .= "WHERE username = ? AND passwd = ?";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $uid, $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 2, $pid, $this->dbManager->STRING_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		return $this->dbManager->fetchResults ( $stmt );
 	}
 	public function insert($parametersArray) {
 		// insertion assumes that all the required parameters are defined and set
@@ -44,8 +53,8 @@ class UsersDAO {
 		$this->dbManager->bindValue ( $stmt, 4, $userID, PDO::PARAM_INT );
 		$this->dbManager->executeQuery ( $stmt );
 		
-		//check for number of affected rows
-		$rowCount = $this->dbManager->getNumberOfAffectedRows($stmt);
+		// check for number of affected rows
+		$rowCount = $this->dbManager->getNumberOfAffectedRows ( $stmt );
 		return ($rowCount);
 	}
 	public function delete($userID) {

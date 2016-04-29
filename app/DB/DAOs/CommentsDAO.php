@@ -1,107 +1,82 @@
 <?php
 class CommentsDAO {
-	private $pdoDbManager;
-
+	private $dbManager;
 	function CommentsDAO($DBMngr) {
-		$this->pdoDbManager = $DBMngr;
-		$this->pdoDbManager->openConnection();
+		$this->dbManager = $DBMngr;
 	}
-
-	function getComments() {
+	public function get($id = null) {
 		$sql = "SELECT * ";
-		$sql .= "FROM b_comment";
-		$sql .= "ORDER BY b_comment.comment_id; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery($sql);
-
-		$this->pdoDbManager->executeQuery ( $stmt );
-		$arrayOfResults = $this->pdoDbManager->fetchResults ( $stmt );
-
-		if (empty($arrayOfResults)) {
-			return null;
-		}
-
-		return $arrayOfResults;
-	}
-
-	function getComment($id) {
-		$sql = "SELECT * ";
-		$sql .= "FROM b_comment";
-		$sql .= "WHERE comment_id = ?; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery ( $sql );
-
-		$this->pdoDbManager->bindValue($stmt, 1, $id, PDO::PARAM_INT);
-
-		$this->pdoDbManager->executeQuery ( $stmt );
-
-		$result = $this->pdoDbManager->getNextRow ( $stmt );
-
-		return $result;
-	}
-
-	function insertComment($params) {
-		//create an INSERT INTO sql statement (reads the parametersArray - this contains the fields submitted in the HTML5 form)
-
-		$commented_date = $params['commented_date'];
-		$content = $params['content'];
-
-		// preparing query
-		$sql = "INSERT INTO b_content (commented_date, content) VALUES (?, ?)";
-		$stmt = $this->pdoDbManager->prepareQuery($sql);
-
-		$this->pdoDbManager->bindValue($stmt, 1, $commented_date, PDO::PARAM_STR);
-		$this->pdoDbManager->bindValue($stmt, 2, $content, PDO::PARAM_STR);
+		$sql .= "FROM b_comment ";
+		if ($id != null)
+		$sql .= "WHERE b_comment.comment_id=? "; 
+		$sql .= "ORDER BY b_comment.comment_id ";
 		
-		// execute the query
-		$this->pdoDbManager->executeQuery($stmt);
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $id, $this->dbManager->INT_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
+		
+		return ($rows);
 	}
-
-	function updateComment($id, $params) {
-		$sql = "UPDATE b_comment ";
-		$sql .= "SET commented_date = ?, content = ?";
-		$sql .= "WHERE comment_id = ?";
-
-		$commented_date = $params['commented_date'];
-		$content = $params['content'];
-
-		$stmt = $this->pdoDbManager->prepareQuery($sql);
-
-		$this->pdoDbManager->BindValue($stmt, 1, $commented_date, PDO::PARAM_STR);
-		$this->pdoDbManager->BindValue($stmt, 2, $content, PDO::PARAM_STR);
-		$this->pdoDbManager->executeQuery($stmt);
-	}
-
-	function deleteComment($id) {
-		$sql = "DELETE FROM b_comment ";
-		$sql .= "WHERE comment_id = ?; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery( $sql );
-
-		$this->pdoDbManager->bindValue($stmt, 1, $id, PDO::PARAM_INT);
-
-		$this->pdoDbManager->executeQuery( $stmt );
-	}
-
 	
-	function searchCommentsByContent($searchStr) {
-		$sql = "SELECT * FROM b_comment WHERE content LIKE ? ; ";
-
-		$stmt = $this->pdoDbManager->prepareQuery( $sql );
+	public function insert($parametersArray) {
+		// insertion assumes that all the required parameters are defined and set
+		$sql = "INSERT INTO b_comment (user_id, post_id,commented_date, content) ";
+		$sql .= "VALUES (?,?,?,?) ";
 		
-		$searchStr = "%" . $searchStr . "%";
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $parametersArray ["user_id"], $this->dbManager->INT_TYPE );
+		$this->dbManager->bindValue ( $stmt, 2, $parametersArray ["post_id"], $this->dbManager->INT_TYPE );
+		$this->dbManager->bindValue ( $stmt, 3, $parametersArray ["commented_date"], $this->dbManager->STRING_TYPE );
+		$this->dbManager->bindValue ( $stmt, 4, $parametersArray ["content"], $this->dbManager->STRING_TYPE );
 		
-		$this->pdoDbManager->bindValue($stmt, 1, $searchStr, PDO::PARAM_STR);
-
-		$this->pdoDbManager->executeQuery( $stmt );
-
-		$arrayOfResults = $this->pdoDbManager->fetchResults ( $stmt );
-
-		if (empty($arrayOfResults)) {
-			return null;
-		}
-
-		return $arrayOfResults;
+		$this->dbManager->executeQuery ( $stmt );
+		$rowCount = $this->dbManager->getNumberOfAffectedRows($stmt);
+		
+		return $rowCount;
+	}
+	
+	public function update($parametersArray,$commentID) {
+		// /create an UPDATE sql statement (reads the parametersArray - this contains the fields submitted in the HTML5 form)
+		$sql = "UPDATE b_comment SET user_id = ?,post_id = ?, commented_date = ?, content = ? WHERE b_comment.comment_id = ?";
+		
+		$this->dbManager->openConnection ();
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $parametersArray ["user_id"], PDO::PARAM_INT );
+		$this->dbManager->bindValue ( $stmt, 2, $parametersArray ["post_id"], PDO::PARAM_INT );
+		$this->dbManager->bindValue ( $stmt, 3, $parametersArray ["commented_date"], PDO::PARAM_STR );
+		$this->dbManager->bindValue ( $stmt, 4, $parametersArray ["content"], PDO::PARAM_STR );
+		$this->dbManager->bindValue ( $stmt, 5, $commentID, PDO::PARAM_INT );
+		$this->dbManager->executeQuery ( $stmt );
+		
+		//check for number of affected rows
+		$rowCount = $this->dbManager->getNumberOfAffectedRows($stmt);
+		return ($rowCount);
+	}
+	public function delete($commentID) {
+		$sql = "DELETE FROM b_comment ";
+		$sql .= "WHERE b_comment.comment_id = ?";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $commentID, $this->dbManager->INT_TYPE );
+		
+		$this->dbManager->executeQuery ( $stmt );
+		$rowCount = $this->dbManager->getNumberOfAffectedRows ( $stmt );
+		return ($rowCount);
+	}
+	public function search($str) {
+		$sql = "SELECT * ";
+		$sql .= "FROM b_comment ";
+		$sql .= "WHERE b_comment.content LIKE CONCAT('%', ?, '%') ";
+		$sql .= "ORDER BY b_comment.comment_id ";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $str, $this->dbManager->STRING_TYPE );
+		
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
+		
+		return ($rows);
 	}
 }
 ?>
