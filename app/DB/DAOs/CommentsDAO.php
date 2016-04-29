@@ -44,7 +44,7 @@ class CommentsDAO {
 		$this->dbManager->executeQuery ( $stmt );
 		$rowCount = $this->dbManager->getNumberOfAffectedRows($stmt);
 		
-		return $rowCount;
+		return $this->dbManager->getLastInsertedID();
 	}
 	
 	//update comment

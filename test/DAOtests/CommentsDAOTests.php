@@ -5,19 +5,16 @@
  * 	Unit tests for CommentsDAO.php
  * 
  */
-require_once '../../simpletest/autorun.php';
 class CommentsDAOTests extends UnitTestCase {
 	private $pdoDbManager;
 	private $commentsDAO;
-	private $id;
 	public function setUp() {
-		
-		require_once '../../app/DB/pdoDbManager.php';
-		require_once '../../app/DB/DAOs/CommentsDAO.php';
-		require_once '../../test/config/config.inc.php';
+		require_once '../app/DB/pdoDbManager.php';
+		require_once '../app/DB/DAOs/CommentsDAO.php';
 		
 		$this->pdoDbManager = new pdoDbManager ();
 		$this->pdoDbManager->openConnection ();
+		
 		$this->commentsDAO = new CommentsDAO ( $this->pdoDbManager );
 	}
 	
@@ -28,54 +25,85 @@ class CommentsDAOTests extends UnitTestCase {
 	 */
 	public function testCreateComment() {
 		$params = [ 
-				"commented_date" => "2002-01-02",
-				"content" => "Comment ID: " . $this->id,
+				"commented_date" => "2016-01-02",
+				"content" => "Connent here",
 				"user_id" => "1",
 				"post_id" => "1" 
 		];
 		
-		$result = $this->commentsDAO->insert( $params );
+		$id = $this->commentsDAO->insert ( $params );
 		
-		// asserting that 1 row has been affected by insertion
-		$this->assertEqual ( $result, 1 );
+		$this->assertNotEqual ( $id, 0 );
+		
+		$this->commentsDAO->delete ( $id );
 	}
 	
 	/*
 	 * Test to read comment
 	 */
 	public function testReadComment() {
+		$params = [ 
+				"commented_date" => "2002-01-02",
+				"content" => "comment here",
+				"user_id" => "1",
+				"post_id" => "1" 
+		];
+		
+		$id = $this->commentsDAO->insert ( $params );
 		
 		// get comment by ID
-		$resultComment = $this->commentsDAO->get ( 6 );
+		$resultComment = $this->commentsDAO->get ( $id );
 		
-		$result = $resultComment [0]["comment_id"] > 0 ? 1 : 0;
+		$result = $resultComment [0] ["comment_id"];
 		
-		$this->assertEqual ( $result, 1 );
+		$this->assertEqual ( $result, $id );
+		
+		$this->commentsDAO->delete ( $id );
 	}
 	
 	/*
 	 * Test to update comment
 	 */
 	public function testUpdateComment() {
-		$params = [ 
-				"commented_date" => "2012-01-02",
-				"content" => "Updated content text. ID: " . $this->id,
+		$userParams = [ 
 				"user_id" => "1",
-				"post_id" => "1"
+				"post_id" => "1",
+				"commented_date" => "2013-01-04",
+				"content" => "Firetrucks are better than tirefrucks." 
 		];
 		
-		$result = $this->commentsDAO->update (  $params, 6 );
+		$id = $this->commentsDAO->insert ( $userParams );
+		
+		$params = [ 
+				"commented_date" => "2012-01-02",
+				"content" => "Updated content text again",
+				"user_id" => "1",
+				"post_id" => "1" 
+		];
+		
+		$result = $this->commentsDAO->update ( $params, $id );
 		
 		$this->assertEqual ( $result, 1 );
+		
+		$this->commentsDAO->delete ( $id );
 	}
 	/*
 	 * Test to delete comment
 	 */
 	public function testDeleteComment() {
-		$result = $this->commentsDAO->delete ( 1 );
+		$userParams = [ 
+				"user_id" => "1",
+				"post_id" => "1",
+				"commented_date" => "2013-01-04",
+				"content" => "Firetrucks are better than tirefrucks." 
+		];
+		
+		$id = $this->commentsDAO->insert ( $userParams );
+		
+		$result = $this->commentsDAO->delete ( $id );
 		
 		// expect delete to delete 0 rows
-		$this->assertEqual ( $result, 0 );
+		$this->assertEqual ( $result, 1 );
 	}
 	public function tearDown() {
 		$this->pdoDbManager->closeConnection ();
