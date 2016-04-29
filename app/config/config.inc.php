@@ -1,4 +1,8 @@
 <?php
+/*
+ * configuration file
+ */
+
 /* database constants */
 define("DB_HOST", "83.212.82.15" ); 		// set database host
 define("DB_USER", "root" ); 			// set database user
@@ -9,21 +13,27 @@ define("DB_CHARSET", "utf8" ); 			// set database charset
 define("DB_DEBUGMODE", true ); 			// set database charset
 
 /* actions for the USERS REST resource */
+// action message for user
 define("ACTION_GET_USER", 33);
 define("ACTION_GET_USERS", 44);
 define("ACTION_CREATE_USER", 55);
 define("ACTION_UPDATE_USER", 66);
 define("ACTION_DELETE_USER", 77);
 define("ACTION_SEARCH_USERS", 88);
-define("ACTION_VALIDATE_USER", 99);
+define("ACTION_SEARCH_POSTSBYUSER", 99);
+define("ACTION_SEARCH_COMMENTBYUSER", 1010);
+define("ACTION_VALIDATE_USER", 11111);
 
+// action message for post
 define("ACTION_GET_POST", 333);
 define("ACTION_GET_POSTS", 444);
 define("ACTION_CREATE_POST", 555);
 define("ACTION_UPDATE_POST", 666);
 define("ACTION_DELETE_POST", 777);
 define("ACTION_SEARCH_POSTS", 888);
+define("ACTION_SEARCH_COMMENTBYPOST", 999);
 
+// action message for comment
 define("ACTION_GET_COMMENT", 3333);
 define("ACTION_GET_COMMENTS", 4444);
 define("ACTION_CREATE_COMMENT", 5555);
@@ -49,7 +59,6 @@ define("HTTPSTATUS_TOKENREQUIRED", 499);
 
 /* HTTP status codes 5xx */
 define("HTTPSTATUS_INTSERVERERR", 500);
-
 define("TIMEOUT_PERIOD", 120);
 
 /* general message */
@@ -65,13 +74,10 @@ define("GENERAL_APINOTEXISTING_ERROR", "Api is not existing");
 define("GENERAL_RESOURCE_CREATED", "Resource has been created");
 define("GENERAL_RESOURCE_UPDATED", "Resource has been updated");
 define("GENERAL_RESOURCE_DELETED", "Resource has been deleted");
-
 define("GENERAL_FORBIDDEN", "Request is ok but action is forbidden");
 define("GENERAL_INVALIDBODY", "Request is ok but transmitted body is invalid");
-
 define("GENERAL_WELCOME_MESSAGE", "Welcome to Blog web-services");
 define("GENERAL_INVALIDROUTE", "Requested route does not exist");
-
 
 /* representation of a new user in the DB */
 define("TABLE_USER_NAME_LENGTH", 25);

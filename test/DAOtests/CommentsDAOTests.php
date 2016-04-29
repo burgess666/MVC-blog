@@ -36,7 +36,7 @@ class CommentsDAOTests extends UnitTestCase {
 				"post_id" => "1" 
 		];
 		
-		$result = $this->commentsDAO->insert ( $params );
+		$result = $this->commentsDAO->insert( $params );
 		
 		// asserting that 1 row has been affected by insertion
 		$this->assertEqual ( $result, 1 );

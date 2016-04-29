@@ -2,13 +2,12 @@
 /**
  * @author Kaiqiang Huang
  *
- * 	JSON View Component 
+ * 	XML View Component 
  *
  */
-class jsonView {
+class xmlView {
 	private $model, $controller, $slimApp;
 	
-	//construction method
 	public function __construct($controller, $model, $slimApp) {
 		$this->controller = $controller;
 		$this->model = $model;
@@ -18,8 +17,8 @@ class jsonView {
 	//output method
 	public function output() {
 		// prepare json response
-		$jsonResponse = json_encode ( $this->model->apiResponse );
-		$this->slimApp->response->write ( $jsonResponse );
+		$xmlResponse = xmlrpc_encode( $this->model->apiResponse );
+		$this->slimApp->response->write ( $xmlResponse );
 	}
 }
 ?>

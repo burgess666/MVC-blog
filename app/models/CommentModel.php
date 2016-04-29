@@ -1,4 +1,12 @@
 <?php
+/**
+ * @author Kaiqiang Huang
+ *
+ * 	Comment model
+ *
+ */
+
+//require indeed files
 require_once "DB/pdoDbManager.php";
 require_once "DB/DAOs/CommentsDAO.php";
 require_once "Validation.php";
@@ -14,13 +22,16 @@ class CommentModel {
 		$this->dbmanager->openConnection ();
 		$this->validationSuite = new Validation ();
 	}
+	
+	//get comments
 	public function getComments() {
 		return ($this->CommentsDAO -> get());
 	}
+	
+	//get comments with comment id
 	public function getComment($comment_id) {
 		if (is_numeric ( $comment_id ))
-			return ($this->CommentsDAO-> get($comment_id));
-		
+			return ($this->CommentsDAO-> get($comment_id));	
 		return false;
 	}
 	/**
@@ -28,21 +39,19 @@ class CommentModel {
 	 * @param array $CommentRepresentation:
 	 *        	an associative array containing the detail of the new comment
 	 */
+	//create new comment
 	public function createNewComment($newComment) {
 		// validation of the values of the new comment
-		
-		// compulsory values
+
 		if (! empty ( $newComment ["user_id"] ) && 
 			! empty ( $newComment ["post_id"] ) &&
 			! empty ( $newComment ["commented_date"] ) && ! empty ( $newComment ["content"])) {
-			/*
-			 * the model knows the representation of a comment in the database and this is: name: varchar(25) surname: varchar(25) email: varchar(50) password: varchar(40)
-			 */
 				if ($newCommentId = $this->CommentsDAO->insert( $newComment ))
 					return ($newCommentId);
 			}
 		}
 		
+	// search comment with similar content
 	public function searchCommentsByContent($content) {
 		if (! empty ( $content )) {
 			$resultSet = $this->CommentsDAO-> search( $content );
@@ -51,6 +60,7 @@ class CommentModel {
 		return false;
 	}
 	
+	//delete comment
 	public function deleteComment($commentID) {
 		if (is_numeric ( $commentID )) {
 			$deletedRows = $this->CommentsDAO-> delete( $commentID );
@@ -60,6 +70,7 @@ class CommentModel {
 		return (false);
 	}
 	
+	//update comment
 	public function updateComment($commentID, $commentNewRepresentation) {
 		if (! empty ( $commentID ) && is_numeric ( $commentID )) {
 			// compulsory values
@@ -73,6 +84,20 @@ class CommentModel {
 						return (true);
 				}
 			}
+	}
+	
+	//get comment with related user id
+	public function getCommentsByUser($userID) {
+		if (is_numeric ( $userID ))
+			return ($this->CommentsDAO->getCommentsByUser( $userID ));
+			return false;
+	}
+	
+	//search comments with related post id
+	public function getCommentsByPost($postID) {
+		if (is_numeric ( $postID ))
+			return ($this->CommentsDAO->getCommentsByPost( $postID ));
+			return false;
 	}
 	
 	public function __destruct() {
