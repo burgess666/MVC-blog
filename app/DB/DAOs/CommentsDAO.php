@@ -8,7 +8,7 @@ class CommentsDAO {
 		$sql = "SELECT * ";
 		$sql .= "FROM b_comment ";
 		if ($id != null)
-		$sql .= "WHERE b_comment.comment_id=? ";
+		$sql .= "WHERE b_comment.comment_id=? "; 
 		$sql .= "ORDER BY b_comment.comment_id ";
 		
 		$stmt = $this->dbManager->prepareQuery ( $sql );

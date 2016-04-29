@@ -11,7 +11,6 @@ class CommentsDAOTests extends UnitTestCase {
 	private $commentsDAO;
 	private $id;
 	public function setUp() {
-		$this->id = 9;
 		
 		require_once '../../app/DB/pdoDbManager.php';
 		require_once '../../app/DB/DAOs/CommentsDAO.php';
@@ -32,12 +31,12 @@ class CommentsDAOTests extends UnitTestCase {
 	public function testCreateComment() {
 		$params = [ 
 				"commented_date" => "2002-01-02",
-				"content" => "Comment ID: ".$this->id,
+				"content" => "Comment ID: " . $this->id,
 				"user_id" => "1",
 				"post_id" => "1" 
 		];
 		
-		$result = $this->commentsDAO->insertComment ( $params );
+		$result = $this->commentsDAO->insert ( $params );
 		
 		// asserting that 1 row has been affected by insertion
 		$this->assertEqual ( $result, 1 );
@@ -49,9 +48,9 @@ class CommentsDAOTests extends UnitTestCase {
 	public function testReadComment() {
 		
 		// get comment by ID
-		$resultComment = $this->commentsDAO->getComment ( $this->id );
+		$resultComment = $this->commentsDAO->get ( 6 );
 		
-		$result = $resultComment ["comment_id"];
+		$result = $resultComment [0]["comment_id"] > 0 ? 1 : 0;
 		
 		$this->assertEqual ( $result, 1 );
 	}
@@ -62,10 +61,12 @@ class CommentsDAOTests extends UnitTestCase {
 	public function testUpdateComment() {
 		$params = [ 
 				"commented_date" => "2012-01-02",
-				"content" => "Updated content text. ID: ".$this->id 
+				"content" => "Updated content text. ID: " . $this->id,
+				"user_id" => "1",
+				"post_id" => "1"
 		];
 		
-		$result = $this->commentsDAO->updateComment ( $this->id, $params );
+		$result = $this->commentsDAO->update (  $params, 6 );
 		
 		$this->assertEqual ( $result, 1 );
 	}
@@ -73,9 +74,10 @@ class CommentsDAOTests extends UnitTestCase {
 	 * Test to delete comment
 	 */
 	public function testDeleteComment() {
-		$result = $this->commentsDAO->deleteComment ( $this->id );
+		$result = $this->commentsDAO->delete ( 1 );
 		
-		$this->assertEqual ( $result, 1 );
+		// expect delete to delete 0 rows
+		$this->assertEqual ( $result, 0 );
 	}
 	public function tearDown() {
 		$this->pdoDbManager->closeConnection ();
