@@ -35,6 +35,15 @@ class UserModel {
 			return ($this->UsersDAO->get ( $userID ));
 		return false;
 	}
+	
+	// authenticate user
+	public function authUser($uname, $pid) {
+		// is alphanumeric username
+		if (ctype_alnum( $uname )) {
+			return ($this->UsersDAO->getUser ( $uname, $pid ));
+		}
+		return false;
+	}
 	/**
 	 * @param array $UserRepresentation:
 	 *        	an associative array containing the detail of the new user
@@ -91,6 +100,18 @@ class UserModel {
 			}
 		}
 		return (false);
+	}
+	
+	public function getPostByUser($userID) {
+		if (is_numeric ( $userID ))
+			return ($this->UsersDAO->getPostsByUser( $userID ));
+			return false;
+	}
+	
+	public function getCommentsByUser($userID) {
+		if (is_numeric ( $userID ))
+			return ($this->UsersDAO->getCommentsByUser( $userID ));
+			return false;
 	}
 	
 	public function __destruct() {

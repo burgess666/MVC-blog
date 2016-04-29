@@ -22,6 +22,7 @@ define("ACTION_DELETE_USER", 77);
 define("ACTION_SEARCH_USERS", 88);
 define("ACTION_SEARCH_POSTSBYUSER", 99);
 define("ACTION_SEARCH_COMMENTBYUSER", 1010);
+define("ACTION_VALIDATE_USER", 11111);
 
 // action message for post
 define("ACTION_GET_POST", 333);

@@ -12,9 +12,20 @@ require_once "config/config.inc.php";
 
 $contentType = strtolower($app->request->headers->get("content-type"));
 
+// middleware route for authentication
+function authenticate(\Slim\Route $route) {
+	$app = \Slim\Slim::getInstance ();
+
+	$action = ACTION_VALIDATE_USER;
+
+	$mvc = new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app );
+
+	return true;
+}
+
 if($contentType == "json" || $contentType == "")
 {
-	$app->map ( "/users(/:id)", function ($userID = null) use($app) {
+	$app->map ( "/users(/:id)", 'authenticate',function ($userID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
@@ -44,7 +55,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET", "POST", "PUT", "DELETE" );
 	
-	$app->map ( "/users/search(/:string)", function ($searchString = null) use($app) {
+	$app->map ( "/users/search(/:string)", 'authenticate',function ($searchString = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["username"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
@@ -59,7 +70,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/users/:id/posts", function ($userid = null) use($app) {
+	$app->map ( "/users/:id/posts", 'authenticate',function ($userid = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["id"] = $userid;
@@ -76,7 +87,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/users/:id/comments", function ($userid = null) use($app) {
+	$app->map ( "/users/:id/comments", 'authenticate',function ($userid = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["id"] = $userid;
@@ -93,7 +104,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "CommentModel", "CommentController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/posts(/:id)", function ($postID = null) use($app) {
+	$app->map ( "/posts(/:id)", 'authenticate',function ($postID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
@@ -122,7 +133,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET", "POST", "PUT", "DELETE" );
 	
-	$app->map ( "/posts/search(/:string)", function ($searchString = null) use($app) {
+	$app->map ( "/posts/search(/:string)", 'authenticate',function ($searchString = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["title"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
@@ -137,7 +148,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "PostModel", "PostController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/posts/:id/comments", function ($postid = null) use($app) {
+	$app->map ( "/posts/:id/comments", 'authenticate',function ($postid = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["id"] = $postid;
@@ -152,7 +163,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "CommentModel", "CommentController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/comments(/:id)", function ($commentID = null) use($app) {
+	$app->map ( "/comments(/:id)", 'authenticate',function ($commentID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
@@ -181,7 +192,7 @@ if($contentType == "json" || $contentType == "")
 		return new loadRunMVCComponents ( "CommentModel", "CommentController", "jsonView", $action, $app, $parameters );
 	} )->via ( "GET", "POST", "PUT", "DELETE" );
 	
-	$app->map ( "/comments/search(/:string)", function ($searchString = null) use($app) {
+	$app->map ( "/comments/search(/:string)",'authenticate', function ($searchString = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["content"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
@@ -198,7 +209,7 @@ if($contentType == "json" || $contentType == "")
 	$app->run ();
 }
 else if ($contentType == "xml"){
-	$app->map ( "/users(/:id)", function ($userID = null) use($app) {
+	$app->map ( "/users(/:id)",'authenticate', function ($userID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
@@ -227,7 +238,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "UserModel", "UserController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET", "POST", "PUT", "DELETE" );
 	
-	$app->map ( "/users/search(/:string)", function ($searchString = null) use($app) {
+	$app->map ( "/users/search(/:string)", 'authenticate',function ($searchString = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["username"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
@@ -242,7 +253,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "UserModel", "UserController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/users/:id/posts", function ($userid = null) use($app) {
+	$app->map ( "/users/:id/posts", 'authenticate',function ($userid = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["id"] = $userid;
@@ -259,7 +270,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "PostModel", "PostController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/users/:id/comments", function ($userid = null) use($app) {
+	$app->map ( "/users/:id/comments",'authenticate', function ($userid = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["id"] = $userid;
@@ -276,7 +287,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "CommentModel", "CommentController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/posts(/:id)", function ($postID = null) use($app) {
+	$app->map ( "/posts(/:id)", 'authenticate',function ($postID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
@@ -305,7 +316,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "PostModel", "PostController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET", "POST", "PUT", "DELETE" );
 	
-	$app->map ( "/posts/search(/:string)", function ($searchString = null) use($app) {
+	$app->map ( "/posts/search(/:string)", 'authenticate',function ($searchString = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["title"] = $searchString; // prepare parameters to be passed to the controller (example: ID)
@@ -320,7 +331,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "PostModel", "PostController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/posts/:id/comments", function ($postid = null) use($app) {
+	$app->map ( "/posts/:id/comments", 'authenticate',function ($postid = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["id"] = $postid;
@@ -335,7 +346,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "CommentModel", "CommentController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET");
 	
-	$app->map ( "/comments(/:id)", function ($commentID = null) use($app) {
+	$app->map ( "/comments(/:id)", 'authenticate',function ($commentID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
@@ -364,7 +375,7 @@ else if ($contentType == "xml"){
 		return new loadRunMVCComponents ( "CommentModel", "CommentController", "xmlView", $action, $app, $parameters );
 	} )->via ( "GET", "POST", "PUT", "DELETE" );
 	
-	$app->map ( "/comments/search(/:string)", function ($searchString = null) use($app) {
+	$app->map ( "/comments/search(/:string)",'authenticate', function ($searchString = null) use($app) {
 		$httpMethod = $app->request->getMethod ();
 		$action = null;
 		$parameters ["content"] = $searchString; // prepare parameters to be passed to the controller (example: ID)

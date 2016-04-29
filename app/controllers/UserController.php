@@ -40,7 +40,20 @@ class UserController {
 					$string = $parameteres ["username"];
 					$this->searchUsers ( $string );
 					break;
-
+				case ACTION_SEARCH_POSTSBYUSER :
+					$this->getPostByUser($id);
+					break;
+				case ACTION_SEARCH_COMMENTBYUSER :
+					$this->getCommentsByUser($id);
+					break;
+				case ACTION_VALIDATE_USER :
+					$headers = $this->slimApp->request->headers;
+					$uid = $headers ['username'];
+					$pid = $headers ['passwd'];
+					if ( !$this->authenticateUser ( $uid, $pid ) ) {
+						$slimApp->halt(401);
+					}
+					break;
 				case null :
 					$this->slimApp->response ()->setStatus ( HTTPSTATUS_BADREQUEST );
 					$Message = array (
