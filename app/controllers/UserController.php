@@ -64,6 +64,30 @@ class UserController {
 			}
 	}
 	
+	/*
+	 * method:  authenticateUser
+	 *
+	 *
+	 */
+	private function authenticateUser($uid, $pid) {
+		$answer = $this->model->authUser ( $uid, $pid );
+		 
+		 
+		// var_dump($answer);
+		 
+		if ($answer != null) {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
+			return true;
+		} else {
+			$this->slimApp->response ()->setStatus ( HTTPSTATUS_NOCONTENT );
+			$Message = array (
+					GENERAL_MESSAGE_LABEL => GENERAL_NOCONTENT_MESSAGE
+			);
+			return false;
+		}
+	}
+	
+	
 	private function getUsers() {
 		//call get user method from user model
 		$answer = $this->model->get();
