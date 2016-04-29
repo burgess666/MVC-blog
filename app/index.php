@@ -19,8 +19,6 @@ function authenticate(\Slim\Route $route) {
 	$action = ACTION_VALIDATE_USER;
 
 	$mvc = new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app );
-
-	return true;
 }
 
 if($contentType == "json" || $contentType == "")
@@ -408,7 +406,10 @@ class loadRunMVCComponents {
 		$model = new $modelName (); // common model
 		$controller = new $controllerName ( $model, $action, $app, $parameters );
 		$view = new $viewName ( $controller, $model, $app, $app->headers); // common view
-		$view->output (); // this returns the response to the requesting client
+		
+		if ($action != ACTION_VALIDATE_USER) {
+			$view->output (); // this returns the response to the requesting client
+		}
 	}
 }
 ?>
