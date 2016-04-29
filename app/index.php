@@ -10,20 +10,19 @@ Slim\Slim::registerAutoloader ();
 $app = new \Slim\Slim (); // slim run-time object
 require_once "config/config.inc.php";
 
-//get content-type value from header
 $contentType = strtolower($app->request->headers->get("content-type"));
 
 // middleware route for authentication
 function authenticate(\Slim\Route $route) {
 	$app = \Slim\Slim::getInstance ();
+
 	$action = ACTION_VALIDATE_USER;
+
 	$mvc = new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app );
 }
 
-
 if($contentType == "json" || $contentType == "")
 {
-	//add routes
 	$app->map ( "/users(/:id)", 'authenticate',function ($userID = null) use($app) {
 	
 		$httpMethod = $app->request->getMethod ();
@@ -407,10 +406,9 @@ class loadRunMVCComponents {
 		$model = new $modelName (); // common model
 		$controller = new $controllerName ( $model, $action, $app, $parameters );
 		$view = new $viewName ( $controller, $model, $app, $app->headers); // common view
-		if($action != ACTION_VALIDATE_USER){
-			// this returns the response to the requesting client
-			$view->output (); 
-					
+		
+		if ($action != ACTION_VALIDATE_USER) {
+			$view->output (); // this returns the response to the requesting client
 		}
 	}
 }

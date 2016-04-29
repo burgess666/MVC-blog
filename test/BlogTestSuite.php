@@ -12,6 +12,7 @@ class BlogTestSuite extends TestSuite {
 		require_once "config/config.inc.php";
 				
 		$this->addFile ('DAOtests/CommentsDAOTests.php');
+		$this->addFile ( 'DAOtests/PostsDAOTests.php' );
 		$this->addFile ('DAOtests/UsersDAOTests.php');
 	}
 }
