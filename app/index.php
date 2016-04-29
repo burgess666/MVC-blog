@@ -15,9 +15,7 @@ $contentType = strtolower($app->request->headers->get("content-type"));
 // middleware route for authentication
 function authenticate(\Slim\Route $route) {
 	$app = \Slim\Slim::getInstance ();
-
 	$action = ACTION_VALIDATE_USER;
-
 	$mvc = new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app );
 
 	return true;

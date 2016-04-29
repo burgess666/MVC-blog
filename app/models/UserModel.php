@@ -102,6 +102,7 @@ class UserModel {
 		return (false);
 	}
 	
+	//the function of search post
 	public function getPostByUser($userID) {
 		if (is_numeric ( $userID ))
 			return ($this->UsersDAO->getPostsByUser( $userID ));

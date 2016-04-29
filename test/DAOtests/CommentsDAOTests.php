@@ -14,12 +14,10 @@ class CommentsDAOTests extends UnitTestCase {
 		
 		require_once '../../app/DB/pdoDbManager.php';
 		require_once '../../app/DB/DAOs/CommentsDAO.php';
-		
 		require_once '../../test/config/config.inc.php';
 		
 		$this->pdoDbManager = new pdoDbManager ();
 		$this->pdoDbManager->openConnection ();
-		
 		$this->commentsDAO = new CommentsDAO ( $this->pdoDbManager );
 	}
 	
