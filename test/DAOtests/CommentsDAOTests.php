@@ -25,8 +25,13 @@ class CommentsDAOTests extends UnitTestCase {
 	 */
 	public function testCreateComment() {
 		$params = [ 
+<<<<<<< HEAD
 				"commented_date" => "2002-01-02",
 				"content" => "Some content here.",
+=======
+				"commented_date" => "2016-01-02",
+				"content" => "Connent here",
+>>>>>>> 983260238bbf9e70b55fc1be1fbd8096574def4c
 				"user_id" => "1",
 				"post_id" => "1" 
 		];
@@ -44,7 +49,11 @@ class CommentsDAOTests extends UnitTestCase {
 	public function testReadComment() {
 		$params = [ 
 				"commented_date" => "2002-01-02",
+<<<<<<< HEAD
 				"content" => "Some content here",
+=======
+				"content" => "comment here",
+>>>>>>> 983260238bbf9e70b55fc1be1fbd8096574def4c
 				"user_id" => "1",
 				"post_id" => "1" 
 		];

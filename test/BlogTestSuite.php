@@ -14,6 +14,7 @@ class BlogTestSuite extends TestSuite {
 				
 		$this->addFile ( 'DAOtests/CommentsDAOTests.php' );
 		$this->addFile ( 'DAOtests/PostsDAOTests.php' );
+		$this->addFile ('DAOtests/UsersDAOTests.php');
 	}
 }
 ?>

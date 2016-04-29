@@ -8,6 +8,7 @@
 class xmlView {
 	private $model, $controller, $slimApp;
 	
+	//construction method
 	public function __construct($controller, $model, $slimApp) {
 		$this->controller = $controller;
 		$this->model = $model;
