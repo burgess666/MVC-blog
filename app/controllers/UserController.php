@@ -61,14 +61,10 @@ class UserController {
 	/*
 	 * method:  authenticateUser
 	 *
-	 *
 	 */
 	private function authenticateUser($uid, $pid) {
 		$answer = $this->model->authUser ( $uid, $pid );
-		 
-		 
-		// var_dump($answer);
-		 
+		 		 
 		if ($answer != null) {
 			$this->slimApp->response ()->setStatus ( HTTPSTATUS_OK );
 			return true;
